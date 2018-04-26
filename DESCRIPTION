@@ -1,0 +1,18 @@
+Package: DtD
+Type: Package
+Title: Distance to default
+Version: 0.1.0
+Author: Benjamin Christoffersen <boennecd@gmail.com>
+Maintainer: Benjamin Christoffersen <boennecd@gmail.com>
+Description: Provides fast methods to compute the Merton's distance to default, estimate the volatility and drift and other related task when working with the Merton model.
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+LinkingTo: Rcpp
+Imports: Rcpp
+Suggests: knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr
+RoxygenNote: 6.0.1
+SystemRequirements: C++11

@@ -1,0 +1,48 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+
+\newcommand*\diff{\mathop{}\!\mathrm{d}}
+\newcommand{\Lpar}[1]{\left( #1\right)}
+
+\begin{document}
+
+<<setup, echo = FALSE>>=
+options(width = 60, digits = 4)
+knitr::opts_chunk$set(echo = FALSE, dpi = 128, message=FALSE, error = FALSE)
+@
+
+\title{Distance to default package}
+\author{Benjamin Christoffersen}
+
+\maketitle
+
+This package is provides fast functions to work with the Merton's distance to default model. We will denote the observed market values by $S_t$ and unobserved asset values by $V_t$. We assume that $V_t$ follows a geometric Brownian motion
+
+$$dV_t = \mu V_t\diff t + \sigma V_t \diff W_t$$
+
+We assume that we observe the assets over increaments of $dt$ in time. Thus, we will let $V_k$ and $V_{k + 1}$ be the value at $t_0 + k \cdot dt$. Thus,
+
+$$V_{k + 1} = V_{k}\exp\Lpar{\Lpar{\mu - \frac{1}{2}\sigma^2}dt + \sigma W_t}$$
+
+We further let $r$ denote the risk free rate, $D_t$ denote debt due at time $t + T$. Then%
+%
+\begin{align}
+C(V_t, D_t, T, \sigma, r) &= V_t N(d_1) - D_t \exp\Lpar{-rT} N(d_1 - \sigma\sqrt T) \nonumber \\
+%
+d_1 &= \frac{\log(V_t) - \log{D_t} + \Lpar{r + \frac{1}{2}\sigma^2}T}{\sigma\sqrt T} \nonumber \\
+%
+S_t &= C(V_t, D_t, T, \sigma, r) \label{eq:stock_relation}
+\end{align}%
+%
+where $C$ is a European call option. Equation~\eqref{eq:stock_relation} can be computed with the \verb|BS_call| function. Further, the \verb|get_underlying| can be used to invert the equation~\eqref{eq:stock_relation}
+
+<<show_call>>=
+library(DtD)
+(S <- BS_call(100, 90, 1, .1, .3))
+get_underlying(S, 90, 1, .1, .3)
+@
+
+
+
+\end{document}
