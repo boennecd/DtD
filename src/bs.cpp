@@ -4,9 +4,9 @@
 
 inline double BS_call_cpp_comp(
     const double V, const double T, const double r,
-    const double std, const double log_D, const double D_present){
-  double denom = std * std::sqrt(T);
-  double d = (std::log(V) - log_D + (r + std * std / 2) *  T) / denom;
+    const double vol, const double log_D, const double D_present){
+  double denom = vol * std::sqrt(T);
+  double d = (std::log(V) - log_D + (r + vol * vol / 2) *  T) / denom;
 
   return
     R::pnorm(d, 0, 1, 1, 0) * V - R::pnorm(d - denom, 0, 1, 1, 0) * D_present;
@@ -14,8 +14,8 @@ inline double BS_call_cpp_comp(
 
 double BS_call_cpp(
     const double V, const double D, const double T, const double r,
-    const double std){
-  return BS_call_cpp_comp(V, T, r, std, std::log(D), D * std::exp(-r * T));
+    const double vol){
+  return BS_call_cpp_comp(V, T, r, vol, std::log(D), D * std::exp(-r * T));
 }
 
 
@@ -27,14 +27,14 @@ double BS_call_cpp(
  */
 double BS_call_cpp_inv(
     const double S, const double D, const double T, const double r,
-    const double std, const double tol,
+    const double vol, const double tol,
     double V_min, double V_max, double V_mid){
   const double log_D = std::log(D);
   const double D_present = D * std::exp(-r * T);
 
   // define function
   auto func = [&](double x){
-    return BS_call_cpp_comp(x, T, r, std, log_D, D_present) - S;
+    return BS_call_cpp_comp(x, T, r, vol, log_D, D_present) - S;
   };
 
   // quick check

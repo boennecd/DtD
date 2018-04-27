@@ -7,8 +7,8 @@
 using namespace Rcpp;
 
 // get_underlying_cpp
-arma::vec get_underlying_cpp(const arma::vec& S, const arma::vec& D, const arma::vec& T, const arma::vec& r, const arma::vec& std, const double tol);
-RcppExport SEXP _DtD_get_underlying_cpp(SEXP SSEXP, SEXP DSEXP, SEXP TSEXP, SEXP rSEXP, SEXP stdSEXP, SEXP tolSEXP) {
+arma::vec get_underlying_cpp(const arma::vec& S, const arma::vec& D, const arma::vec& T, const arma::vec& r, const arma::vec& vol, const double tol);
+RcppExport SEXP _DtD_get_underlying_cpp(SEXP SSEXP, SEXP DSEXP, SEXP TSEXP, SEXP rSEXP, SEXP volSEXP, SEXP tolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -16,26 +16,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::vec& >::type D(DSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type T(TSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type r(rSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type std(stdSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type vol(volSEXP);
     Rcpp::traits::input_parameter< const double >::type tol(tolSEXP);
-    rcpp_result_gen = Rcpp::wrap(get_underlying_cpp(S, D, T, r, std, tol));
-    return rcpp_result_gen;
-END_RCPP
-}
-// kmv
-arma::vec kmv(const arma::vec& S, const arma::vec& D, const arma::vec& T, const arma::vec& r, const arma::vec& time, double vol, const double tol);
-RcppExport SEXP _DtD_kmv(SEXP SSEXP, SEXP DSEXP, SEXP TSEXP, SEXP rSEXP, SEXP timeSEXP, SEXP volSEXP, SEXP tolSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::vec& >::type S(SSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type D(DSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type T(TSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type r(rSEXP);
-    Rcpp::traits::input_parameter< const arma::vec& >::type time(timeSEXP);
-    Rcpp::traits::input_parameter< double >::type vol(volSEXP);
-    Rcpp::traits::input_parameter< const double >::type tol(tolSEXP);
-    rcpp_result_gen = Rcpp::wrap(kmv(S, D, T, r, time, vol, tol));
+    rcpp_result_gen = Rcpp::wrap(get_underlying_cpp(S, D, T, r, vol, tol));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -54,11 +37,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// BS_fit_cpp
+Rcpp::List BS_fit_cpp(const arma::vec& S, const arma::vec& D, const arma::vec& T, const arma::vec& r, const arma::vec& time, double vol_start, const std::string method, const double tol, const double eps);
+RcppExport SEXP _DtD_BS_fit_cpp(SEXP SSEXP, SEXP DSEXP, SEXP TSEXP, SEXP rSEXP, SEXP timeSEXP, SEXP vol_startSEXP, SEXP methodSEXP, SEXP tolSEXP, SEXP epsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type S(SSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type D(DSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type T(TSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type r(rSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type time(timeSEXP);
+    Rcpp::traits::input_parameter< double >::type vol_start(vol_startSEXP);
+    Rcpp::traits::input_parameter< const std::string >::type method(methodSEXP);
+    Rcpp::traits::input_parameter< const double >::type tol(tolSEXP);
+    Rcpp::traits::input_parameter< const double >::type eps(epsSEXP);
+    rcpp_result_gen = Rcpp::wrap(BS_fit_cpp(S, D, T, r, time, vol_start, method, tol, eps));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_DtD_get_underlying_cpp", (DL_FUNC) &_DtD_get_underlying_cpp, 6},
-    {"_DtD_kmv", (DL_FUNC) &_DtD_kmv, 7},
     {"_DtD_BS_call", (DL_FUNC) &_DtD_BS_call, 5},
+    {"_DtD_BS_fit_cpp", (DL_FUNC) &_DtD_BS_fit_cpp, 9},
     {NULL, NULL, 0}
 };
 

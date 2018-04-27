@@ -7,3 +7,6 @@ inst/doc
 vignettes/*
 !vignettes/*.Rnw
 !vignettes/*.pdf
+!vignettes/*.bib
+
+tests/testthat/*.pdf

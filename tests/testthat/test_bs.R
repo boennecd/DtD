@@ -35,30 +35,23 @@ test_that("cpp inversion method works", {
       vals[i, ]))
 })
 
-microbenchmark::microbenchmark(
-  get_underlying(25, 100, 1, .01, .3), times = 1e5)
+# microbenchmark::microbenchmark(
+#   get_underlying(25, 100, 1, .01, .3), times = 1e5)
+# profvis::profvis(replicate(1e5, get_underlying(25, 100, 1, .01, .3)))
 
 test_that("mapply and vectorized version gives the same", {
-  std <- .1
-  mu  <- .05
-  dt  <- .05
-  V_0 <- 100
-  t. <- seq(dt, 2, by = dt)
+  set.seed(81460086)
+  sims <- BS_sim(
+    vol = .1, mu = .05, dt = .1, V_0 = 100, T. = 1,
+    D = runif(10, 80, 100), r = runif(10, -.01, .01))
 
-  set.seed(83992673)
-  V <- V_0 * exp(
-    (mu - std^2/2) * t. + cumsum(rnorm(length(t.), sd = std * sqrt(dt))))
-
-  D <- c(rep(80, 20), rep( 60, length(t.) - 20))
-  r <- c(rep( 0, 10), rep(.01, length(t.) - 10))
-
-  S <- mapply(BS_call, V, D, T = 1, r, std)
-
-  expect_equal(
-    mapply(get_underlying, S, D, T = 1, r, std),
-    get_underlying(S, D, 1, r, std))
+  with(sims,
+    expect_equal(
+      mapply(get_underlying, S, D, T = T, r, vol),
+      get_underlying(S, D, T, r, vol)))
 })
 
-microbenchmark::microbenchmark(
-  mapply(get_underlying, S, D, T = 1, r, std),
-  get_underlying(S, D, 1, r, std), times = 1e4)
+# microbenchmark::microbenchmark(
+#   mapply(get_underlying, S, D, T = 1, r, vol),
+#   get_underlying(S, D, 1, r, vol), times = 1e4)
+# profvis::profvis(replicate(1e3, get_underlying(S, D, 1, r, vol)))
