@@ -4,6 +4,9 @@
 
 \newcommand*\diff{\mathop{}\!\mathrm{d}}
 \newcommand{\Lpar}[1]{\left( #1\right)}
+\newcommand{\Lbra}[1]{\left\{ #1\right\}}
+\newcommand{\Lver}[1]{\left| #1\right|}
+\newcommand{\Lvert}[1]{\left\rVert #1\right\lVert}
 
 \begin{document}
 
@@ -45,7 +48,7 @@ d_1 &= \frac{\log(V_t) - \log{D_t} + \Lpar{r + \frac{1}{2}\sigma^2}T}{\sigma\sqr
 S_t &= C(V_t, D_t, T, \sigma, r) \label{eq:stock_relation}
 \end{align}%
 %
-where $C$ is a European call option. $T$ is the time time to maturity, $D_t$ is the debt to due at time $T + t$, and $r$ is the risk free rate. $d_1$ in equation~\eqref{eq:dd} is the so-called distance to default. Equation~\eqref{eq:stock_relation} can be computed with the \verb|BS_call| function. Further, the \verb|get_underlying| can be used to invert the equation~\eqref{eq:stock_relation}
+where $C$ is a European call option. $T$ is the time to maturity, $D_t$ is the debt to due at time $T + t$, and $r$ is the risk free rate. Common choices tend to be $T = 1$ year and $D_t$ as the short term debt plus half of the long term debt. $d_1$ in equation~\eqref{eq:dd} is the so-called distance to default. Equation~\eqref{eq:stock_relation} can be computed with the \verb|BS_call| function. Further, the \verb|get_underlying| can be used to invert the equation~\eqref{eq:stock_relation}
 
 <<show_call>>=
 library(DtD)
@@ -97,11 +100,11 @@ isTRUE(all.equal(sims$S, S))
 
 \section{Drift and volatility estimation}
 
-There are a few ways to estimate the volaltilty, $\sigma$,  and drift, $\mu$. This package only includes the iterative procedure and maximum likelihood method covered in \cite{Duan94,Vassalou04,Duan04,Bharath08}. We denote the former as the ``KMV'' method and the latter as the MLE. We have not implemented the method in \cite{Kmv03} as it will be based on two meassurements and may be quite variable \citep[as mentioned in][]{Kmv03}.
+There are a few ways to estimate the volaltilty, $\sigma$,  and drift, $\mu$. This package only includes the iterative procedure and maximum likelihood method covered in \cite{Duan94,Vassalou04,Duan04,Bharath08}. We denote the former as the ``iterative'' method and the latter as the MLE. We have not implemented the method in \cite{Kmv03} as it will be based on two meassurements and may be quite variable \citep[as mentioned in][]{Kmv03}.
 
-The parameters can be estimeted with the \verb|BS_fit| function. The KMV method is used in the following call
+The parameters can be estimeted with the \verb|BS_fit| function. The iterative method is used in the following call
 
-<<use_kmv>>=
+<<use_iterative>>=
 # simulate data
 set.seed(52722168)
 sims <- BS_sim(
@@ -113,7 +116,9 @@ sims <- BS_sim(
 head(sims$time, 6)
 
 # estimate parameters
-BS_fit(S = sims$S, D = sims$D, T. = sims$T, r = sims$r, time = sims$time)
+it_est <-
+  BS_fit(S = sims$S, D = sims$D, T. = sims$T, r = sims$r, time = sims$time)
+it_est
 @
 
 The volatility is quite close the actual value while the mean is drift. This may be due to the fact that the likelihood is flat in the drift. We can also estimate the parameters when there unequal time gaps in the data set
@@ -138,8 +143,65 @@ sims <- sims[sort(sample.int(nrow(sims), 100L)), ]
 range(diff(sims$time))
 
 # estimate parameters
-BS_fit(S = sims$S, D = sims$D, T. = sims$T, r = sims$r, time = sims$time)
+BS_fit(
+  S = sims$S, D = sims$D, T. = sims$T, r = sims$r, time = sims$time,
+  method = "iterative")
 @
+
+The maximum likelihood estimator is obtained by maximizing the observed log likelihood%
+%
+\begin{equation}\label{eq:log_like}\begin{split}
+L(\mu,\sigma,\vec{S}) & \propto
+  - n \log \Lpar{\sigma^2dt}
+  - \sum_{k = 1}^n
+    \frac{\Lpar{\log \frac{C^{-1}(S_k, \sigma)}{C^{-1}(S_{k - 1}, \sigma)} - \Lpar{\mu - \sigma^2/2}dt}^2}{\sigma^2dt} \\
+%
+ & \hphantom{=}\hspace{12pt}
+  - 2 \sum_{k = 1}^n\Lpar{\log C^{-1}\Lpar{S_k, \sigma}
+ + \log \Lver{
+  C'\Lpar{C^{-1}\Lpar{S_k, \sigma},\sigma }}}
+\end{split}\end{equation}%
+%
+where $C^{-1}$ is the inverse of the call option price in equation~\eqref{eq:stock_relation} and implicitly depend on $D_t$, $T$, and $r$. Notice that we need to use $dt$ in \eqref{eq:log_like} and the time to maturity, $T$, in $C$ and $C^{-1}$. The last term in equation~\eqref{eq:log_like} follows from the change of variable%
+%
+\begin{equation}
+\begin{split}
+  X &= h^{-1}(Y) \\
+  f_Y(y) &= f_X\Lpar{h^{-1}\Lpar{y}}\Lver{(h^{-1})'\Lpar{y}} \\
+         &= f_X\Lpar{h^{-1}\Lpar{y}}\Lver{\frac{1}{h'\Lpar{h^{-1}\Lpar{y}}}}
+\end{split}
+\end{equation}%
+%
+where $f$ denotes a density and the subscript denotes which random variable the density is for. We can estimate the parameters with the MLE method as follows
+
+<<use_mle>>=
+mle_est <- BS_fit(
+  S = sims$S, D = sims$D, T. = sims$T, r = sims$r, time = sims$time,
+  method = "mle")
+mle_est
+@
+
+The result are usually very similar although they need not to as far as I gather
+
+<<show_diff>>=
+it_est$est - mle_est$est
+@
+
+The iterative method is quite a lot faster though
+
+<<show_time>>=
+library(microbenchmark)
+with(sims,
+  microbenchmark(
+    iter = BS_fit(
+      S = S, D = D, T. = T, r = r, time = time, method = "iterative"),
+    mle = BS_fit(
+      S = S, D = D, T. = T, r = r, time = time, method = "mle"),
+    times = 5))
+@
+
+
+
 
 \medskip
 

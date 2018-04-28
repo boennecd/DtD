@@ -10,3 +10,5 @@ vignettes/*
 !vignettes/*.bib
 
 tests/testthat/*.pdf
+
+.sandbox/*

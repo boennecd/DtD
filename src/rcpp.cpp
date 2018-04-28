@@ -16,10 +16,15 @@ Rcpp::List BS_fit_cpp(
     const double tol, const double eps){
   est_result res;
 
-  if(method == "kmv"){
-    res = kmv(S, D, T, r, time, vol_start, tol, eps);
+  if(method == "iterative"){
+    res = est_iterative(S, D, T, r, time, vol_start, tol, eps);
     if(!res.success)
-      Rcpp::stop("KMV method failed");
+      Rcpp::stop("iterative method failed");
+
+  } else if(method == "mle"){
+    res = mle(S, D, T, r, time, vol_start, tol, eps);
+    if(!res.success)
+      Rcpp::stop("MLE method failed");
 
   } else
     Rcpp::stop("Method not implemented");

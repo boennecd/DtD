@@ -1,11 +1,11 @@
 #' @importFrom checkmate assert_numeric assert_number assert_choice
 #' @export
-BS_fit <- function(S, D, T., r, time, vol_start, method = c("kmv", "mle"),
+BS_fit <- function(S, D, T., r, time, vol_start, method = c("iterative", "mle"),
                    tol = 1e-12, eps = 1e-8){
   #####
   # checks
   method <- method[1]
-  assert_choice(method, c("kmv", "mle"))
+  assert_choice(method, c("iterative", "mle"))
 
   assert_numeric(S   , lower = 1e-16, finite = TRUE)
   assert_numeric(D   , lower = 1e-16, finite = TRUE)

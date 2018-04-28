@@ -1,3 +1,6 @@
+#ifndef BS_H
+#define BS_H
+
 #include "RcppArmadillo.h"
 #include <array>
 
@@ -24,6 +27,12 @@ struct est_result {
     success(false), n_iter(0L) {}
   };
 
-est_result kmv(
+est_result est_iterative(
     const arma::vec&, const arma::vec&, const arma::vec&, const arma::vec &,
     const arma::vec&, double vol, const double, const double);
+
+est_result mle(
+    const arma::vec&, const arma::vec&, const arma::vec&, const arma::vec &,
+    const arma::vec&, double vol, const double, const double);
+
+#endif // BS_H

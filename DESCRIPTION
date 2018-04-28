@@ -12,7 +12,8 @@ LinkingTo: Rcpp, RcppArmadillo
 Imports: Rcpp
 Suggests: knitr,
     rmarkdown,
-    testthat
+    testthat, 
+    microbenchmark
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 SystemRequirements: C++11

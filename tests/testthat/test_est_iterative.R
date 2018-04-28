@@ -1,7 +1,6 @@
-context("Testing kmv")
+context("Testing iterative method")
 
-
-test_that("kmv method gives previous output without supplying a starting value for the vol", {
+test_that("iterative method gives previous output without supplying a starting value for the vol", {
   set.seed(79156879)
   sims <- BS_sim(
     vol = .2, mu = .01, dt = .1, V_0 = 100, T. = 1,
@@ -11,13 +10,13 @@ test_that("kmv method gives previous output without supplying a starting value f
     expect_equal(
       BS_fit(S = S, D = D, T. = T, r = r, time = time),
       structure(list(
-        ests = structure(c(0.107623107917476, 0.206531228321864),
+        ests = structure(c(0.128950682053545, 0.206531228321864),
                          .Names = c("mu", "vol")),
         n_iter = 12L, success = TRUE),
         .Names = c("ests", "n_iter", "success"))))
 })
 
-test_that("kmv method gives previous output when supplying a starting value for the vol", {
+test_that("iterative method gives previous output when supplying a starting value for the vol", {
   set.seed(79156879)
   sims <- BS_sim(
     vol = .2, mu = .01, dt = .1, V_0 = 100, T. = 1,
@@ -27,7 +26,7 @@ test_that("kmv method gives previous output when supplying a starting value for 
        expect_equal(
          BS_fit(S = S, D = D, T. = T, r = r, time = time, vol_start = 1),
          structure(list(
-           ests = structure(c(0.107623107917476, 0.206531228321864),
+           ests = structure(c(0.128950682053545, 0.206531228321864),
                             .Names = c("mu", "vol")),
            n_iter = 15L, success = TRUE),
            .Names = c("ests", "n_iter", "success"))))
