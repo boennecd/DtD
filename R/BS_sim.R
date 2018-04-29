@@ -1,4 +1,28 @@
-#' @importFrom checkmate assert_numeric assert_number assert_choice
+#' @title Simulate Stock Price and Price of Underlying Asset
+#'
+#' @description At least one of \code{D}, \code{r}, or \code{T.} needs to have
+#' the desired length of the simulated series. All vectors with length greater
+#' than one needs to have the same length.
+#'
+#' @inheritParams BS_fit
+#' @param vol numeric scalar with \eqn{\sigma} value.
+#' @param mu numeric scalar with \eqn{\mu} value.
+#' @param dt numeric scalar with time increments between observations.
+#' @param r numeric vector or scalar with risk free rates.
+#'
+#' @examples
+#' library(DtD)
+#' set.seed(79156879)
+#' sims <- BS_sim(
+#'   vol = .1, mu = .05, dt = .2, V_0 = 100, T. = 1, D = rep(80, 20), r = .01)
+#'
+#' # plot underlying
+#' plot(sims$V)
+#'
+#' # plot stock
+#' plot(sims$S)
+#'
+#' @importFrom checkmate assert_numeric assert_number
 #' @export
 BS_sim <- function(vol, mu, dt, V_0, D, r, T.){
   #####
@@ -8,9 +32,7 @@ BS_sim <- function(vol, mu, dt, V_0, D, r, T.){
   assert_number(dt , lower = 1e-16, finite = TRUE)
   assert_number(V_0, lower = 1e-16, finite = TRUE)
 
-  assert_numeric(D , lower = 1e-16, finite = TRUE)
-  assert_numeric(r                , finite = TRUE)
-  assert_numeric(T., lower = 1e-16, finite = TRUE)
+  .check_args(D = D, r = r, T. = T.)
 
   #####
   # get arguments for latter calls
@@ -24,7 +46,7 @@ BS_sim <- function(vol, mu, dt, V_0, D, r, T.){
   V <- V_0 * exp(
     (mu - vol^2/2) * time + cumsum(c(
       0, rnorm(length(time) - 1L, sd = vol * sqrt(dt)))))
-  S <- with(args, mapply(BS_call, V, D, T = T, r, vol))
+  S <- with.default(args, BS_call(V, D, T. = T, r, vol))
 
-  with(args, data.frame(V, S, time, D, r, vol, mu, T))
+  with.default(args, data.frame(V, S, time, D, r, vol, mu, T))
 }

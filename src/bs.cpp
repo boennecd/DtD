@@ -12,6 +12,7 @@ inline double BS_call_cpp_comp(
     R::pnorm(d, 0, 1, 1, 0) * V - R::pnorm(d - denom, 0, 1, 1, 0) * D_present;
 }
 
+// [[Rcpp::export]]
 double BS_call_cpp(
     const double V, const double D, const double T, const double r,
     const double vol){

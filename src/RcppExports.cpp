@@ -6,6 +6,21 @@
 
 using namespace Rcpp;
 
+// BS_call_cpp
+double BS_call_cpp(const double V, const double D, const double T, const double r, const double vol);
+RcppExport SEXP _DtD_BS_call_cpp(SEXP VSEXP, SEXP DSEXP, SEXP TSEXP, SEXP rSEXP, SEXP volSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const double >::type V(VSEXP);
+    Rcpp::traits::input_parameter< const double >::type D(DSEXP);
+    Rcpp::traits::input_parameter< const double >::type T(TSEXP);
+    Rcpp::traits::input_parameter< const double >::type r(rSEXP);
+    Rcpp::traits::input_parameter< const double >::type vol(volSEXP);
+    rcpp_result_gen = Rcpp::wrap(BS_call_cpp(V, D, T, r, vol));
+    return rcpp_result_gen;
+END_RCPP
+}
 // get_underlying_cpp
 arma::vec get_underlying_cpp(const arma::vec& S, const arma::vec& D, const arma::vec& T, const arma::vec& r, const arma::vec& vol, const double tol);
 RcppExport SEXP _DtD_get_underlying_cpp(SEXP SSEXP, SEXP DSEXP, SEXP TSEXP, SEXP rSEXP, SEXP volSEXP, SEXP tolSEXP) {
@@ -19,21 +34,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::vec& >::type vol(volSEXP);
     Rcpp::traits::input_parameter< const double >::type tol(tolSEXP);
     rcpp_result_gen = Rcpp::wrap(get_underlying_cpp(S, D, T, r, vol, tol));
-    return rcpp_result_gen;
-END_RCPP
-}
-// BS_call
-double BS_call(const double V, const double D, const double T, const double r, const double std);
-RcppExport SEXP _DtD_BS_call(SEXP VSEXP, SEXP DSEXP, SEXP TSEXP, SEXP rSEXP, SEXP stdSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const double >::type V(VSEXP);
-    Rcpp::traits::input_parameter< const double >::type D(DSEXP);
-    Rcpp::traits::input_parameter< const double >::type T(TSEXP);
-    Rcpp::traits::input_parameter< const double >::type r(rSEXP);
-    Rcpp::traits::input_parameter< const double >::type std(stdSEXP);
-    rcpp_result_gen = Rcpp::wrap(BS_call(V, D, T, r, std));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -58,8 +58,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_DtD_BS_call_cpp", (DL_FUNC) &_DtD_BS_call_cpp, 5},
     {"_DtD_get_underlying_cpp", (DL_FUNC) &_DtD_get_underlying_cpp, 6},
-    {"_DtD_BS_call", (DL_FUNC) &_DtD_BS_call, 5},
     {"_DtD_BS_fit_cpp", (DL_FUNC) &_DtD_BS_fit_cpp, 9},
     {NULL, NULL, 0}
 };

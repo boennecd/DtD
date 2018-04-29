@@ -12,4 +12,32 @@
   args
 }
 
+#' @importFrom checkmate assert_numeric assert_number
+.check_args <- function(...){
+  a <- list(...)
 
+  with.default(a, {
+    if(!is.null(a$V))
+      assert_numeric(V   , lower = 1e-16, finite = TRUE)
+    if(!is.null(a$S))
+      assert_numeric(S   , lower = 1e-16, finite = TRUE)
+    if(!is.null(a$D))
+      assert_numeric(D   , lower = 1e-16, finite = TRUE)
+    if(!is.null(a$T.))
+      assert_numeric(T.  , lower = 1e-16, finite = TRUE)
+    if(!is.null(a$r))
+      assert_numeric(r                  , finite = TRUE)
+    if(!is.null(a$vol))
+      assert_numeric(vol , lower = 1e-16, finite = TRUE)
+    if(!is.null(a$time)){
+      assert_numeric(time               , finite = TRUE)
+      stopifnot(!is.unsorted(time))
+    }
+    if(!is.null(a$tol))
+      assert_number(tol      , lower = 1e-16, finite = TRUE)
+    if(!is.null(a$eps))
+      assert_number(eps      , lower = 1e-16, finite = TRUE)
+  })
+
+  invisible()
+}

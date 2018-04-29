@@ -30,14 +30,14 @@ knitr::knit_hooks$set(chunk = function(x, options) {
 
 \maketitle
 
-This package is provides fast functions to work with the Merton's distance to default model. We will only briefly cover the model here. See e.g., \cite{Lando09} for a more complete coverage. Denote the observed market values by $S_t$ and unobserved asset values by $V_t$. We assume that $V_t$ follows a geometric Brownian motion
-
-$$dV_t = \mu V_t\diff t + \sigma V_t \diff W_t$$
-
-We assume that we observe the assets over increaments of $dt$ in time. Thus, we will let $V_k$ the value at $t_0 + k \cdot dt$. Thus,
-
-$$V_{k + 1} = V_{k}\exp\Lpar{\Lpar{\mu - \frac{1}{2}\sigma^2}dt + \sigma W_t}$$
-
+This package provides fast functions to work with the Merton's distance to default model. We will only briefly cover the model here. See e.g., \cite{Lando09} for a more complete coverage. Denote the observed market values by $S_t$ and unobserved asset values by $V_t$. We assume that $V_t$ follows a geometric Brownian motion%
+%
+$$dV_t = \mu V_t\diff t + \sigma V_t \diff W_t$$%
+%
+We observe the asset values over increments of $dt$ in time. Let $V_k$ denote the value at $t_0 + k \cdot dt$. Thus,%
+%
+$$V_{k + 1} = V_{k}\exp\Lpar{\Lpar{\mu - \frac{1}{2}\sigma^2}dt + \sigma W_t}$$%
+%
 We further let $r$ denote the risk free rate, $D_t$ denote debt due at time $t + T$. Then%
 %
 \begin{align}
@@ -48,13 +48,14 @@ d_1 &= \frac{\log(V_t) - \log{D_t} + \Lpar{r + \frac{1}{2}\sigma^2}T}{\sigma\sqr
 S_t &= C(V_t, D_t, T, \sigma, r) \label{eq:stock_relation}
 \end{align}%
 %
-where $C$ is a European call option. $T$ is the time to maturity, $D_t$ is the debt to due at time $T + t$, and $r$ is the risk free rate. Common choices tend to be $T = 1$ year and $D_t$ as the short term debt plus half of the long term debt. $d_1$ in equation~\eqref{eq:dd} is the so-called distance to default. Equation~\eqref{eq:stock_relation} can be computed with the \verb|BS_call| function. Further, the \verb|get_underlying| can be used to invert the equation~\eqref{eq:stock_relation}
+where $C$ is a European call option price, $T$ is the time to maturity, $D_t$ is the debt to due at time $T + t$, and $r$ is the risk free rate. Common choices tend to be $T = 1$ year and $D_t$ as the short term debt plus half of the long term debt. $d_1$ in equation~\eqref{eq:dd} is the so-called distance-to-default which is the name of the package. It is a very good predictor of default risk despite it's simplicity \citep[see e.g.,][]{Bharath08}.
+
+Equation~\eqref{eq:stock_relation} can be computed with the \verb|BS_call| function. Further, the \verb|get_underlying| function can be used to invert call option price in equation~\eqref{eq:stock_relation}
 
 <<show_call>>=
 library(DtD)
 (S <- BS_call(100, 90, 1, .1, .3))
 get_underlying(S, 90, 1, .1, .3)
-options(digits = 4)
 @
 
 To illustrate the above then we can simulate the underlying and transform the data into the stock price as follows
@@ -65,7 +66,7 @@ vol <- .1
 mu  <- .05
 dt  <- .05
 V_0 <- 100
-t.  <- (1:50 - 1L) * dt
+t.  <- (1:50 - 1) * dt
 D   <- c(rep(80, 27), rep( 70, length(t.) - 27))
 r   <- c(rep( 0, 13), rep(.02, length(t.) - 13))
 
@@ -76,7 +77,7 @@ V <- V_0 * exp(
     0, rnorm(length(t.) - 1, sd = vol * sqrt(dt)))))
 
 # compute stock price
-S <- mapply(BS_call, V, D, T = 1, r, vol)
+S <- BS_call(V, D, T. = 1, r, vol)
 plot(t., S, type = "l", xlab = "Time", ylab = expression(S[t]))
 @
 
@@ -100,55 +101,29 @@ isTRUE(all.equal(sims$S, S))
 
 \section{Drift and volatility estimation}
 
-There are a few ways to estimate the volaltilty, $\sigma$,  and drift, $\mu$. This package only includes the iterative procedure and maximum likelihood method covered in \cite{Duan94,Vassalou04,Duan04,Bharath08}. We denote the former as the ``iterative'' method and the latter as the MLE. We have not implemented the method in \cite{Kmv03} as it will be based on two meassurements and may be quite variable \citep[as mentioned in][]{Kmv03}.
+There are a few ways to estimate the volatility, $\sigma$,  and drift, $\mu$. This package only includes the iterative procedure and maximum likelihood method covered in \cite{Duan94,Vassalou04,Duan04,Bharath08}. We denote the former as the ``iterative'' method and the latter as the MLE. We have not implemented the method where one solves two simultaneous equation as it will be based on two measurements and may be quite variable \citep[as mentioned in][]{Kmv03}.
 
-The parameters can be estimeted with the \verb|BS_fit| function. The iterative method is used in the following call
+The parameters can be estimated with the \verb|BS_fit| function. The iterative method is used in the following call
 
 <<use_iterative>>=
 # simulate data
-set.seed(52722168)
+set.seed(52722174)
 sims <- BS_sim(
   vol = .2, mu = .05, dt = 1/252, V_0 = 100, r = .01, T. = 1,
   # simulate firm that grows partly by lending
-  D = 80 * (1 + .03 * (0:(252 * 4)) / 252))
+  D = 70 * (1 + .01 * (0:(252 * 4)) / 252))
 
 # the sims data.frame has a time column. We need to pass this
 head(sims$time, 6)
 
 # estimate parameters
-it_est <-
-  BS_fit(S = sims$S, D = sims$D, T. = sims$T, r = sims$r, time = sims$time)
+it_est <- BS_fit(
+  S = sims$S, D = sims$D, T. = sims$T, r = sims$r, time = sims$time,
+  method = "iterative")
 it_est
 @
 
-The volatility is quite close the actual value while the mean is drift. This may be due to the fact that the likelihood is flat in the drift. We can also estimate the parameters when there unequal time gaps in the data set
-
-<<include = FALSE, eval = FALSE>>=
-out <- replicate(
-  1000L, {
-    sims <<- BS_sim(
-      vol = .2, mu = .05, dt = 1/252, V_0 = 100, r = .01, T. = 1,
-      # simulate firm that grows partly by lending
-      D = 80 * (1 + .03 * (0:(252 * 1)) / 252))
-
-    BS_fit(S = sims$S, D = sims$D, T. = sims$T, r = sims$r, time = sims$time)$ests
-  })
-@
-
-<<show_works_with_uneq_gaps>>=
-# drop random rows
-sims <- sims[sort(sample.int(nrow(sims), 100L)), ]
-
-# the gap lengths are not equal anymore
-range(diff(sims$time))
-
-# estimate parameters
-BS_fit(
-  S = sims$S, D = sims$D, T. = sims$T, r = sims$r, time = sims$time,
-  method = "iterative")
-@
-
-The maximum likelihood estimator is obtained by maximizing the observed log likelihood%
+The volatility is quite close the actual value while the drift is a bit off. This may be due to the fact that the likelihood is flat in the drift. The maximum likelihood estimator is obtained by maximizing the observed log likelihood%
 %
 \begin{equation}\label{eq:log_like}\begin{split}
 L(\mu,\sigma,\vec{S}) & \propto
@@ -187,7 +162,7 @@ The result are usually very similar although they need not to as far as I gather
 it_est$est - mle_est$est
 @
 
-The iterative method is quite a lot faster though
+The iterative method is faster though
 
 <<show_time>>=
 library(microbenchmark)
@@ -200,6 +175,32 @@ with(sims,
     times = 5))
 @
 
+We can also estimate the parameters when there unequal time gaps in the data set
+
+<<include = FALSE, eval = FALSE>>=
+out <- replicate(
+  1000L, {
+    sims <<- BS_sim(
+      vol = .2, mu = .05, dt = 1/252, V_0 = 100, r = .01, T. = 1,
+      # simulate firm that grows partly by lending
+      D = 80 * (1 + .03 * (0:(252 * 1)) / 252))
+
+    BS_fit(S = sims$S, D = sims$D, T. = sims$T, r = sims$r, time = sims$time)$ests
+  })
+@
+
+<<show_works_with_uneq_gaps>>=
+# drop random rows
+sims <- sims[sort(sample.int(nrow(sims), 100L)), ]
+
+# the gap lengths are not equal anymore
+range(diff(sims$time))
+
+# estimate parameters
+BS_fit(
+  S = sims$S, D = sims$D, T. = sims$T, r = sims$r, time = sims$time,
+  method = "iterative")
+@
 
 
 

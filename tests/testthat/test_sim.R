@@ -45,5 +45,5 @@ test_that("We can get S and V from the simulated output", {
     r = c(rep( 0, 10), rep(.01, 30)))
 
   with(sims, expect_equal(V, get_underlying(S, D, T, r, vol)))
-  with(sims, expect_equal(S, mapply(BS_call, V, D, T = T, r, vol)))
+  with(sims, expect_equal(S, BS_call(V, D, T, r, vol)))
 })
