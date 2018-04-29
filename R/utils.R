@@ -34,7 +34,7 @@ globalVariables(c("V", "S", "D", "T.", "r", "vol", "time", "tol", "eps"))
       assert_numeric(vol , lower = 1e-16, finite = TRUE)
     if(!is.null(a$time)){
       assert_numeric(time               , finite = TRUE)
-      stopifnot(!is.unsorted(time))
+      stopifnot(all(diff(time) > 1e-16))
     }
     if(!is.null(a$tol))
       assert_number(tol      , lower = 1e-16, finite = TRUE)

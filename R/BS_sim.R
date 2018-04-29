@@ -7,7 +7,6 @@
 #' @inheritParams BS_fit
 #' @param vol numeric scalar with \eqn{\sigma} value.
 #' @param mu numeric scalar with \eqn{\mu} value.
-#' @param dt numeric scalar with time increments between observations.
 #' @param V_0 numeric scalar with starting value of the underlying asset, \eqn{S_{0}}.
 #'
 #' @examples

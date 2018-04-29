@@ -55,12 +55,10 @@ public:
 
 /*
  * Use Nelder-Mead method from `optim`. See
- *    https://github.com/wch/r-source/blob/428183678c456d499b4ad50c09c774ff4524c5a0/src/library/stats/R/optim.R
- *    https://github.com/wch/r-source/blob/fe006f7c594d95446ff669fadd3e14267831ad28/src/library/stats/src/optim.c#L244
- *    https://github.com/wch/r-source/blob/41fdf528dc0756f3fae714b983f22a31587e755c/src/appl/optim.c#L268
- *    https://github.com/wch/r-source/blob/8a55192af9a65291afffb64c22b29801ea9151a6/src/include/R_ext/Applic.h#L65
+ *    r-source/src/library/stats/R/optim.R
+ *    r-source/src/library/stats/src/optim.c#L244
+ *    r-source/src/appl/optim.c
  */
-
 static double optimfunc(int n, double *p, void *ex)
 {
   log_like* ll = (log_like*) ex;
@@ -95,4 +93,3 @@ est_result mle(
 
   return out;
 }
-

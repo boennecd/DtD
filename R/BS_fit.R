@@ -1,18 +1,20 @@
 #' @title  Fit Black-Scholes Parameters
 #'
 #' @description
-#' Function to estimate the volatility, \eqn{\sigma}, and drift, \eqn{\mu}. See [TODO: insert vignette link]
-#' for details. All vectors with length greater than one needs to have the same
-#' length. The Nelder-Mead method from \code{\link{optim}} is used when
-#' \code{method = "mle"}.
+#' Function to estimate the volatility, \eqn{\sigma}, and drift, \eqn{\mu}. See
+#' \code{vignette("Distance-to-default", package = "DtD")} for details. All
+#' vectors with length greater than one needs to have the same length. The
+#' Nelder-Mead method from \code{\link{optim}} is used when
+#' \code{method = "mle"}. Either \code{time} or \code{dt} should be passed.
 #'
 #' @param S numeric vector with observed stock prices.
 #' @param D numeric vector or scalar with debt due in \code{T.}.
 #' @param T. numeric vector or scalar with time to maturity.
 #' @param r numeric vector or scalar with risk free rates.
 #' @param time numeric vector with the observation times.
+#' @param dt numeric scalar with time increments between observations.
 #' @param vol_start numeric scalar with starting value for \eqn{\sigma}.
-#' @param method string to specifiy which estimation method to use.
+#' @param method string to specify which estimation method to use.
 #' @param tol numeric scalar with tolerance in \code{\link{get_underlying}}.
 #' @param eps convergence threshold.
 #'
@@ -36,12 +38,29 @@
 #' @importFrom stats rnorm sd
 #' @importFrom utils tail
 #' @export
-BS_fit <- function(S, D, T., r, time, vol_start, method = c("iterative", "mle"),
-                   tol = 1e-12, eps = 1e-8){
+BS_fit <- function(S, D, T., r, time, dt, vol_start,
+                   method = c("iterative", "mle"), tol = 1e-12, eps = 1e-8){
   #####
   # checks
   method <- method[1]
   assert_choice(method, c("iterative", "mle"))
+  if(!missing(time) && !missing(dt))
+    stop("Either ", sQuote("dt"), " or ", sQuote("time"), " should be passed")
+
+  if(missing(time)){
+    lens <- c(length(S), length(D), length(T.), length(r))
+    max_len = max(max(lens))
+    time <- (1:max_len - 1L) * dt
+    lens <- c(lens, max_len)
+
+  } else{
+    lens <- c(length(S), length(D), length(T.), length(r), length(time))
+    max_len = max(max(lens))
+
+  }
+  stopifnot(length(time) == max_len)
+  stopifnot(max_len > 2L)
+
   .check_args(S = S, D = D, T. = T., r = r, time = time, tol = tol, eps = eps)
 
   if(missing(vol_start)){
@@ -50,12 +69,6 @@ BS_fit <- function(S, D, T., r, time, vol_start, method = c("iterative", "mle"),
 
   } else
     assert_number(vol_start, lower = 1e-16, finite = TRUE)
-
-  # some more checks when we have the lengths
-  lens <- c(length(S), length(D), length(T.), length(r), length(time))
-  max_len = max(max(lens))
-  stopifnot(length(time) == max_len)
-  stopifnot(max_len > 2L)
 
   #####
   # call cpp code and return

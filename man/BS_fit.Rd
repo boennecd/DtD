@@ -4,7 +4,7 @@
 \alias{BS_fit}
 \title{Fit Black-Scholes Parameters}
 \usage{
-BS_fit(S, D, T., r, time, vol_start, method = c("iterative", "mle"),
+BS_fit(S, D, T., r, time, dt, vol_start, method = c("iterative", "mle"),
   tol = 1e-12, eps = 1e-08)
 }
 \arguments{
@@ -18,9 +18,11 @@ BS_fit(S, D, T., r, time, vol_start, method = c("iterative", "mle"),
 
 \item{time}{numeric vector with the observation times.}
 
+\item{dt}{numeric scalar with time increments between observations.}
+
 \item{vol_start}{numeric scalar with starting value for \eqn{\sigma}.}
 
-\item{method}{string to specifiy which estimation method to use.}
+\item{method}{string to specify which estimation method to use.}
 
 \item{tol}{numeric scalar with tolerance in \code{\link{get_underlying}}.}
 
@@ -34,10 +36,11 @@ and number of log likelihood evaluations when \code{method = "mle"}.}
 \item{success}{logical for whether the estimation method converged.}
 }
 \description{
-Function to estimate the volatility, \eqn{\sigma}, and drift, \eqn{\mu}. See [TODO: insert vignette link]
-for details. All vectors with length greater than one needs to have the same
-length. The Nelder-Mead method from \code{\link{optim}} is used when
-\code{method = "mle"}.
+Function to estimate the volatility, \eqn{\sigma}, and drift, \eqn{\mu}. See
+\code{vignette("Distance-to-default", package = "DtD")} for details. All
+vectors with length greater than one needs to have the same length. The
+Nelder-Mead method from \code{\link{optim}} is used when
+\code{method = "mle"}. Either \code{time} or \code{dt} should be passed.
 }
 \examples{
 library(DtD)
