@@ -1,3 +1,5 @@
+[![Build Status on Travis](https://travis-ci.org/boennecd/DtD.svg?branch=master,osx)](https://travis-ci.org/boennecd/DtD)
+
 DtD: Distance to Default
 ========================
 
@@ -8,6 +10,3 @@ devtools::install_github("boennecd/DtD")
 ```
 
 See [this vignette](vignettes/Distance-to-default.pdf) for examples of how to use the functions. The package is currently not on CRAN. 
-
-
-

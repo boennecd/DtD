@@ -1,4 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.sandbox\/.*$
+^\.travis\.yml$
 ^vignettes\/.*\.(?!(Rnw|bib)).*$
