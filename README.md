@@ -1,4 +1,4 @@
-[![Build Status on Travis](https://travis-ci.org/boennecd/DtD.svg?branch=master,osx)](https://travis-ci.org/boennecd/DtD)
+[![Build Status on Travis](https://travis-ci.org/boennecd/DtD.svg?branch=master)](https://travis-ci.org/boennecd/DtD)
 
 DtD: Distance to Default
 ========================
