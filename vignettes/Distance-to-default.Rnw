@@ -209,7 +209,7 @@ BS_fit(
 
 \medskip
 
-\bibliographystyle{rusnat}
+\bibliographystyle{plain}
 \bibliography{Distance-to-default}
 
 
