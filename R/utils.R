@@ -12,6 +12,9 @@
   args
 }
 
+#' @importFrom utils globalVariables
+globalVariables(c("V", "S", "D", "T.", "r", "vol", "time", "tol", "eps"))
+
 #' @importFrom checkmate assert_numeric assert_number
 .check_args <- function(...){
   a <- list(...)

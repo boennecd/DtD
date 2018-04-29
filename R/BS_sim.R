@@ -8,7 +8,7 @@
 #' @param vol numeric scalar with \eqn{\sigma} value.
 #' @param mu numeric scalar with \eqn{\mu} value.
 #' @param dt numeric scalar with time increments between observations.
-#' @param r numeric vector or scalar with risk free rates.
+#' @param V_0 numeric scalar with starting value of the underlying asset, \eqn{S_{0}}.
 #'
 #' @examples
 #' library(DtD)
@@ -22,7 +22,9 @@
 #' # plot stock
 #' plot(sims$S)
 #'
-#' @importFrom checkmate assert_numeric assert_number
+#' @seealso \code{\link{BS_fit}}
+#'
+#' @importFrom checkmate assert_number
 #' @export
 BS_sim <- function(vol, mu, dt, V_0, D, r, T.){
   #####

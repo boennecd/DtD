@@ -3,7 +3,7 @@
 \name{BS_call}
 \alias{BS_call}
 \alias{get_underlying}
-\title{European Call Option and the Inverse}
+\title{European Call Option Price and the Inverse}
 \usage{
 BS_call(V, D, T., r, vol)
 
@@ -16,11 +16,16 @@ get_underlying(S, D, T., r, vol, tol = 1e-12)
 
 \item{T.}{numeric vector or scalar with time to maturity.}
 
+\item{r}{numeric vector or scalar with risk free rates.}
+
 \item{vol}{numeric vector or scalar with volatilities, \eqn{\sigma}s.}
 
 \item{S}{numeric vector with observed stock prices.}
 
 \item{tol}{numeric scalar with tolerance in \code{\link{get_underlying}}.}
+}
+\value{
+Numeric vector or scalar with price of the underlying asset or equity price.
 }
 \description{
 Computes the European call option and the inverse. All vectors
@@ -37,4 +42,7 @@ stopifnot(with(
 stopifnot(with(
   sims, isTRUE(all.equal(S, BS_call(V, D, T, r, vol)))))
 
+}
+\seealso{
+\code{\link{BS_fit}}
 }

@@ -8,6 +8,9 @@
 \newcommand{\Lver}[1]{\left| #1\right|}
 \newcommand{\Lvert}[1]{\left\rVert #1\right\lVert}
 
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Using Distance to Default}
+
 \begin{document}
 
 <<setup, echo = FALSE>>=

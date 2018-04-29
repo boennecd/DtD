@@ -21,6 +21,8 @@
 #' stopifnot(with(
 #'   sims, isTRUE(all.equal(S, BS_call(V, D, T, r, vol)))))
 #'
+#' @seealso \code{\link{BS_fit}}
+#'
 #' @export
 get_underlying <- function(S, D, T., r, vol, tol = 1e-12){
   lens <- c(length(S), length(D), length(T.), length(r), length(vol))

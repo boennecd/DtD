@@ -14,6 +14,8 @@ BS_fit(S, D, T., r, time, vol_start, method = c("iterative", "mle"),
 
 \item{T.}{numeric vector or scalar with time to maturity.}
 
+\item{r}{numeric vector or scalar with risk free rates.}
+
 \item{time}{numeric vector with the observation times.}
 
 \item{vol_start}{numeric scalar with starting value for \eqn{\sigma}.}
@@ -38,6 +40,7 @@ length. The Nelder-Mead method from \code{\link{optim}} is used when
 \code{method = "mle"}.
 }
 \examples{
+library(DtD)
 set.seed(83486778)
 sims <- BS_sim(
   vol = .1, mu = .05, dt = .1, V_0 = 100, T. = 1, D = rep(80, 20), r = .01)

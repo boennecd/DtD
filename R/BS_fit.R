@@ -9,6 +9,7 @@
 #' @param S numeric vector with observed stock prices.
 #' @param D numeric vector or scalar with debt due in \code{T.}.
 #' @param T. numeric vector or scalar with time to maturity.
+#' @param r numeric vector or scalar with risk free rates.
 #' @param time numeric vector with the observation times.
 #' @param vol_start numeric scalar with starting value for \eqn{\sigma}.
 #' @param method string to specifiy which estimation method to use.
@@ -32,6 +33,8 @@
 #'      BS_fit(S = S, D = D, T. = T, r = r, time = time, method = "mle"))
 #'
 #' @importFrom checkmate assert_number assert_choice
+#' @importFrom stats rnorm sd
+#' @importFrom utils tail
 #' @export
 BS_fit <- function(S, D, T., r, time, vol_start, method = c("iterative", "mle"),
                    tol = 1e-12, eps = 1e-8){
