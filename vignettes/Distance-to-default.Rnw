@@ -106,6 +106,21 @@ isTRUE(all.equal(sims$S, S))
 
 There are a few ways to estimate the volatility, $\sigma$,  and drift, $\mu$. This package only includes the iterative procedure and maximum likelihood method covered in \cite{Duan94,Vassalou04,Duan04,Bharath08}. We denote the former as the ``iterative'' method and the latter as the MLE. We have not implemented the method where one solves two simultaneous equation as it will be based on two measurements and may be quite variable \citep[as mentioned in][]{Kmv03}.
 
+The iterative methods is as follows. Start with an initial guess of the volatility and denote this $\hat{\sigma}^{(0)}$. Then for $i = 1,2,\dots$
+
+\begin{enumerate}
+  \item compute the underlying asset values $V_k = C^{-1}(S_k, \hat{\sigma}^{(i - 1)})$ where $C^{-1}$ is the inverse of the call option price in equation~\eqref{eq:stock_relation} and implicitly depend on $D_t$, $T$, and $r$. Then compute the $\log$ returns $x_k = \log V_k - \log V_{k-1}$. \label{enum:it_first_step}
+%
+  \item compute the maximum likelihood estimate as if we observed the $\log$ returns. I.e. compute
+  $$\hat{\sigma}^{(i)} = \frac{1}{n}\sum_{k = 1}^n \frac{x_k^2}{dt_k} -
+    \left(\frac{1}{n}\sum_{k =1}^n\frac{x_k}{\sqrt{dt_k}} \right )^2
+    ,\qquad \hat{\mu}^{(i)} = \frac{1}{n}\sum_{k=1}^n \frac{x_k}{dt_k}
+    + \frac{\hat{\sigma}^{(i)2}}{2}$$
+    where we have extended to unequal gaps, $dt_k$.
+%
+  \item Repeat step~\ref{enum:it_first_step} if $(\hat{\sigma}^{(i)}, \hat{\mu}^{(i)})$ is far from $(\hat{\sigma}^{(i - 1)}, \hat{\mu}^{(i - 1)})$. Otherwise stop.
+\end{enumerate}
+
 The parameters can be estimated with the \verb|BS_fit| function. The iterative method is used in the following call
 
 <<use_iterative>>=
@@ -132,7 +147,7 @@ The volatility is quite close the actual value while the drift is a bit off. Thi
 L(\mu,\sigma,\vec{S}) & \propto
   - n \log \Lpar{\sigma^2dt}
   - \sum_{k = 1}^n
-    \frac{\Lpar{\log \frac{C^{-1}(S_k, \sigma)}{C^{-1}(S_{k - 1}, \sigma)} - \Lpar{\mu - \sigma^2/2}dt}^2}{\sigma^2dt} \\
+    \frac{\Lpar{\log \frac{C^{-1}(S_k, \sigma)}{C^{-1}(S_{k - 1}, \sigma)} - \Lpar{\mu - \sigma^2/2}dt_k}^2}{\sigma^2dt_k} \\
 %
  & \hphantom{=}\hspace{12pt}
   - 2 \sum_{k = 1}^n\Lpar{\log C^{-1}\Lpar{S_k, \sigma}
@@ -140,7 +155,7 @@ L(\mu,\sigma,\vec{S}) & \propto
   C'\Lpar{C^{-1}\Lpar{S_k, \sigma},\sigma }}}
 \end{split}\end{equation}%
 %
-where $C^{-1}$ is the inverse of the call option price in equation~\eqref{eq:stock_relation} and implicitly depend on $D_t$, $T$, and $r$. Notice that we need to use $dt$ in \eqref{eq:log_like} and the time to maturity, $T$, in $C$ and $C^{-1}$. The last term in equation~\eqref{eq:log_like} follows from the change of variable%
+where $C^{-1}$ is the inverse of the call option price in equation~\eqref{eq:stock_relation} and implicitly depend on $D_t$, $T$, and $r$. Notice that we need to use $dt_k$ in \eqref{eq:log_like} and the time to maturity, $T$, in $C$ and $C^{-1}$. The last term in equation~\eqref{eq:log_like} follows from the change of variable%
 %
 \begin{equation}
 \begin{split}
