@@ -8,7 +8,9 @@ Authors@R: c(person("Benjamin", "Christoffersen",
              person("R-core", email = "R-core@R-project.org",
                     role = c("cph")))
 Maintainer: Benjamin Christoffersen <boennecd@gmail.com>
-Description: Provides fast methods to work with Merton's distance to default model. The methods includes simulation and estimation of the parameters.
+Description: Provides fast methods to work with Merton's distance to default 
+  model introduced in Merton (1974) <doi:10.1111/j.1540-6261.1974.tb03058.x>. 
+  The methods includes simulation and estimation of the parameters.
 License: GPL-2
 Encoding: UTF-8
 BugReports: https://github.com/boennecd/DtD/issues
