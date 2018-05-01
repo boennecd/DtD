@@ -21,3 +21,9 @@ Possibly mis-spelled words in DESCRIPTION:
 
 I have added R-core as a copyright holder as I use the `nmmin` function from 
 `R_ext/Applic.h`.
+
+## Re-submission
+This is a re-submission. In this version I have:
+
+* Added a reference for Merton's distance to default model in the 'Description' 
+  field.
