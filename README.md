@@ -1,4 +1,4 @@
-[![Build Status on Travis](https://travis-ci.org/boennecd/DtD.svg?branch=master)](https://travis-ci.org/boennecd/DtD)[![](https://www.r-pkg.org/badges/version/DtD)](http://cran.rstudio.com/web/packages/DtD/index.html)[![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/DtD)](http://cran.rstudio.com/web/packages/DtD/index.html)
+[![Build Status on Travis](https://travis-ci.org/boennecd/DtD.svg?branch=master)](https://travis-ci.org/boennecd/DtD) [![](https://www.r-pkg.org/badges/version/DtD)](http://cran.rstudio.com/web/packages/DtD/index.html) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/DtD)](http://cran.rstudio.com/web/packages/DtD/index.html)
 
 DtD: Distance to Default
 ========================
