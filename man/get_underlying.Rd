@@ -22,7 +22,7 @@ get_underlying(S, D, T., r, vol, tol = 1e-12)
 
 \item{S}{numeric vector with observed stock prices.}
 
-\item{tol}{numeric scalar with tolerance in \code{\link{get_underlying}}.}
+\item{tol}{numeric scalar with tolerance to \code{\link{get_underlying}}.}
 }
 \value{
 Numeric vector or scalar with price of the underlying asset or equity price.

@@ -15,7 +15,7 @@
 #' @param dt numeric scalar with time increments between observations.
 #' @param vol_start numeric scalar with starting value for \eqn{\sigma}.
 #' @param method string to specify which estimation method to use.
-#' @param tol numeric scalar with tolerance in \code{\link{get_underlying}}.
+#' @param tol numeric scalar with tolerance to \code{\link{get_underlying}}.
 #' @param eps convergence threshold.
 #'
 #' @return
@@ -34,7 +34,7 @@
 #' with(sims,
 #'      BS_fit(S = S, D = D, T. = T, r = r, time = time, method = "mle"))
 #'
-#' @importFrom checkmate assert_number assert_choice
+#' @importFrom checkmate assert_number
 #' @importFrom stats rnorm sd
 #' @importFrom utils tail
 #' @export
@@ -43,25 +43,15 @@ BS_fit <- function(S, D, T., r, time, dt, vol_start,
   #####
   # checks
   method <- method[1]
-  assert_choice(method, c("iterative", "mle"))
-  if(!missing(time) && !missing(dt))
-    stop("Either ", sQuote("dt"), " or ", sQuote("time"), " should be passed")
-
-  if(missing(time)){
-    lens <- c(length(S), length(D), length(T.), length(r))
-    max_len = max(max(lens))
-    time <- (1:max_len - 1L) * dt
-    lens <- c(lens, max_len)
-
-  } else{
-    lens <- c(length(S), length(D), length(T.), length(r), length(time))
-    max_len = max(max(lens))
-
-  }
-  stopifnot(length(time) == max_len)
-  stopifnot(max_len > 2L)
-
-  .check_args(S = S, D = D, T. = T., r = r, time = time, tol = tol, eps = eps)
+  cl <- match.call()
+  m <- match(c("S", "D", "T.", "r", "time", "dt", "method", "tol", "eps"),
+             names(cl), 0L)
+  cl <- cl[c(1L, m)]
+  cl[c("method", "tol", "eps")] <- list(method, tol, eps)
+  cl[[1L]] <- quote(DtD:::.BS_fit_check_n_setup)
+  out <- eval(cl, parent.frame())
+  lens <- out$lens
+  time <- out$time
 
   if(missing(vol_start)){
     # use heuristic from Bharath et al. (2008)
@@ -75,4 +65,29 @@ BS_fit <- function(S, D, T., r, time, dt, vol_start,
   args <- .get_eq_length_args(
     lens = lens, S = S, D = D, T = T., r = r, time = time)
   with.default(args, BS_fit_cpp(S, D, T, r, time, vol_start, method, tol, eps))
+}
+
+#' @importFrom checkmate assert_choice
+.BS_fit_check_n_setup <- function(S, D, T., r, time, dt, method, tol, eps){
+  assert_choice(method, c("iterative", "mle"))
+  if(!missing(time) && !missing(dt))
+    stop("Either ", sQuote("dt"), " or ", sQuote("time"), " should be passed")
+
+  if(missing(time) || is.null(time)){
+    lens <- c(length(S), length(D), length(T.), length(r))
+    max_len = max(max(lens))
+    time <- (1:max_len - 1L) * dt
+    lens <- c(lens, max_len)
+
+  } else {
+    lens <- c(length(S), length(D), length(T.), length(r), length(time))
+    max_len = max(max(lens))
+
+  }
+  stopifnot(length(time) == max_len)
+  stopifnot(max_len > 2L)
+
+  .check_args(S = S, D = D, T. = T., r = r, time = time, tol = tol, eps = eps)
+
+  list(lens = lens, time = time) # used later
 }

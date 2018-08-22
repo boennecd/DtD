@@ -2,10 +2,12 @@
 
 export(BS_call)
 export(BS_fit)
+export(BS_fit_rolling)
 export(BS_sim)
 export(get_underlying)
 importFrom(Rcpp,sourceCpp)
 importFrom(checkmate,assert_choice)
+importFrom(checkmate,assert_count)
 importFrom(checkmate,assert_integer)
 importFrom(checkmate,assert_number)
 importFrom(checkmate,assert_numeric)
