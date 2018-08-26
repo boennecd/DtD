@@ -24,7 +24,9 @@ BS_fit_rolling(S, D, T., r, time, dt, vol_start, method = c("iterative",
 
 \item{method}{string to specify which estimation method to use.}
 
-\item{tol}{numeric scalar with tolerance to \code{\link{get_underlying}}.}
+\item{tol}{numeric scalar with tolerance to \code{\link{get_underlying}}.
+The difference is scaled  if \code{S} is large than \code{S}
+as in the \code{tolerance} argument to \code{\link{all.equal.numeric}}.}
 
 \item{eps}{convergence threshold.}
 
@@ -41,11 +43,15 @@ in each window.}
 Matrix with the \code{grp}, number of observation in the window, parameter
 estimates, \code{'n_iter'} as in \code{\link{BS_fit}}, and whether the
 estimation method was successful.
+
+An \code{error} attribute is added in case other code than
+\code{\link{optim}} fails. It is a list os lists with the \code{grp} index
+where the method failed and the output from \code{\link{try}}.
 }
 \description{
 Function to estimate the volatility, \eqn{\sigma}, and drift, \eqn{\mu}. See
 \code{vignette("Distance-to-default", package = "DtD")} for details. E.g.,
-the window can be over a given period of months.
+the window can be over a given number of months.
 }
 \examples{
 # Simulate data
@@ -64,7 +70,7 @@ grp <- sims$month
 width <- 12L        # window w/ 12 month width
 min_obs <- 21L * 3L # require 3 months of data
 
-# estimate with results with R loop which is slightly simpler then the
+# estimate results with R loop which is slightly simpler then the
 # implementation
 grps <- unique(grp)
 out <- matrix(

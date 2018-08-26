@@ -43,3 +43,26 @@ test_that("min width argument gives the correct result", {
                  info = sQuote(m))
   }
 })
+
+
+test_that("approiate result is given with extreme values", {
+  set.seed(55770945)
+  n <- 20L * 2L
+  sims <- BS_sim(
+    vol = .1, mu = .05, dt = .1, V_0 = 100, T. = 1,
+    D = runif(n, 80, 90), r = runif(n, 0, .01))
+  sims$grp <- (1:nrow(sims) - 1L) %/% 2L + 1L
+
+  extreme <- 36L
+  sims$D[extreme] <- 1e9
+
+  out_func <- with(sims, BS_fit_rolling(
+    S = S, D = D, T. = T, r = r, time = time, method = "iterative",
+    grp = grp, width = 20L, min_obs = 20L))
+  expect_true(all(
+    out_func[as.integer(extreme / 2L):nrow(out_func), "success"] == 0))
+  expect_true(all(is.na(
+    out_func[as.integer(extreme / 2L):nrow(out_func), c("mu", "vol")] == 0)))
+
+  expect_equal(sapply(attr(out_func, "errors"), "[[", "grp"), 18:20)
+})

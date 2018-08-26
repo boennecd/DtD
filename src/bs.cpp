@@ -34,8 +34,10 @@ double BS_call_cpp_inv(
   const double D_present = D * std::exp(-r * T);
 
   // define function
+  bool scale = std::abs(S) > tol;
   auto func = [&](double x){
-    return BS_call_cpp_comp(x, T, r, vol, log_D, D_present) - S;
+    double diff = BS_call_cpp_comp(x, T, r, vol, log_D, D_present) - S;
+    return(scale ? diff / S : S);
   };
 
   // quick check

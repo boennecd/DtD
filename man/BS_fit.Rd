@@ -24,7 +24,9 @@ BS_fit(S, D, T., r, time, dt, vol_start, method = c("iterative", "mle"),
 
 \item{method}{string to specify which estimation method to use.}
 
-\item{tol}{numeric scalar with tolerance to \code{\link{get_underlying}}.}
+\item{tol}{numeric scalar with tolerance to \code{\link{get_underlying}}.
+The difference is scaled  if \code{S} is large than \code{S}
+as in the \code{tolerance} argument to \code{\link{all.equal.numeric}}.}
 
 \item{eps}{convergence threshold.}
 }

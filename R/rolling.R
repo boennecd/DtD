@@ -19,6 +19,10 @@
 #' estimates, \code{'n_iter'} as in \code{\link{BS_fit}}, and whether the
 #' estimation method was successful.
 #'
+#' An \code{error} attribute is added in case other code than
+#' \code{\link{optim}} fails. It is a list os lists with the \code{grp} index
+#' where the method failed and the output from \code{\link{try}}.
+#'
 #' @seealso
 #' \code{\link{BS_fit}}
 #'
@@ -104,19 +108,32 @@ BS_fit_rolling <- function(
   out <- matrix(
     NA_real_, nrow = length(grps), ncol = 6,
     dimnames = list(NULL, c("mu", "vol", "n_iter", "success", "n_obs", "grp")))
+  errs <- NULL
   for(g in grps){
     idx <- which(grps == g)
     keep <- which(grp %in% (g - width + 1L):g)
     out[idx, c("n_obs", "grp")] <- c(length(keep), g)
     if(length(keep) < min_obs)
       next
-    res <- with.default(
-      args[keep, ], BS_fit_cpp(S, D, T, r, time, vol_start, method, tol, eps))
+    res <- try(with.default(
+      args[keep, ], BS_fit_cpp(S, D, T, r, time, vol_start, method, tol, eps)),
+      silent = TRUE)
+
+    if(inherits(res, "try-error")){
+      out[idx, "success"] <- FALSE
+      errs <- c(errs, list(list(grp = g, error = res)))
+      next
+
+    }
+
     out[idx, c("mu", "vol", "n_iter", "success")] <- rep(
       do.call(c, res[c("ests", "n_iter", "success")]), each = length(idx))
     if(res$success)
       vol_start <- res$ests["vol"]
   }
+
+  if(length(errs) > 0)
+    attr(out, "errors") <- errs
 
   out
 }

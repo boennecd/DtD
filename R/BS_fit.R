@@ -16,6 +16,8 @@
 #' @param vol_start numeric scalar with starting value for \eqn{\sigma}.
 #' @param method string to specify which estimation method to use.
 #' @param tol numeric scalar with tolerance to \code{\link{get_underlying}}.
+#' The difference is scaled  if \code{S} is large than \code{S}
+#' as in the \code{tolerance} argument to \code{\link{all.equal.numeric}}.
 #' @param eps convergence threshold.
 #'
 #' @return
