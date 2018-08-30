@@ -12,7 +12,7 @@ test_that("iterative method gives previous output without supplying a starting v
       structure(list(
         ests = structure(c(0.128950682053545, 0.206531228321864),
                          .Names = c("mu", "vol")),
-        n_iter = 12L, success = TRUE),
+        n_iter = 11L, success = TRUE),
         .Names = c("ests", "n_iter", "success"))))
 })
 
@@ -28,7 +28,7 @@ test_that("iterative method gives previous output when supplying a starting valu
          structure(list(
            ests = structure(c(0.128950682053545, 0.206531228321864),
                             .Names = c("mu", "vol")),
-           n_iter = 15L, success = TRUE),
+           n_iter = 14L, success = TRUE),
            .Names = c("ests", "n_iter", "success"))))
 })
 

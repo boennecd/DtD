@@ -2,7 +2,10 @@
 #include "utils.h"
 
 inline bool almost_eq(double a, double b, double eps){
-  return std::abs(a - b) / (std::abs(a) + 1e-8) < eps;
+  double abs_a = std::abs(a);
+  return (abs_a < eps) ?
+    std::abs(a - b) < eps :
+    std::abs(a - b) / (abs_a + 1e-8) < eps;
 }
 
 est_result est_iterative(
@@ -29,21 +32,32 @@ est_result est_iterative(
 
     // compute vol and mean
     const double *dt = dts.begin();
-    double log_prev, log_new = std::log(V[0]), s1 = 0, s2 = 0, ss = 0,
-      log_return;
-    for(auto V_i = V.begin() + 1; V_i != V.end(); ++V_i, ++dt){
+    double log_prev, log_new = std::log(V[0]), xbar = 0, log_return, i = 1.,
+      sse = 0;
+
+    for(auto V_i = V.begin() + 1; V_i != V.end(); ++V_i, ++dt, i += 1.){
       log_prev = log_new;
       log_new = std::log(*V_i);
       log_return = log_new - log_prev;
 
-      s1 += log_return              /           *dt;
-      s2 += log_return              / std::sqrt(*dt);
-      ss += log_return * log_return /           *dt;
+      /* stable methods as in
+       *    https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Online_algorithm
+       *
+       *  r ~ N(\mu dt, dt \sigma^2)
+       *  <=> r / dt ~ N(\mu, \sigma^2 / dt)
+       *  <=> r / sqrt{dt} ~ N(\mu \sqrt{dt}, \sigma^2)
+       *
+       *  So first update the mean and then the sse
+       */
+      double xbar_old = xbar;
+      xbar += (log_return  / *dt - xbar) / i;
+      double t1 = std::sqrt(*dt), t2 = log_return / t1;
+      sse += (t2 - xbar_old * t1) * (t2 - xbar * t1);
     }
 
-    s2 /= (n - 1.);
-    vol = std::sqrt(ss / (n - 1.) - s2 * s2);
-    mu  =  s1 / (n - 1.) + vol * vol / 2.;
+    vol = std::sqrt(sse / (n - 1.)); /* recall this is the regular division by
+                                        n as we only have n - 1 returns */
+    mu = xbar + vol * vol / 2.;
 
     // check if converged
     if(i > 0L and almost_eq(mu_old, mu, eps) and
