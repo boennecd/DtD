@@ -9,6 +9,10 @@ get_underlying_cpp <- function(S, D, T, r, vol, tol) {
     .Call(`_DtD_get_underlying_cpp`, S, D, T, r, vol, tol)
 }
 
+merton_ll_cpp <- function(S, D, T, r, time, vol, mu, tol) {
+    .Call(`_DtD_merton_ll_cpp`, S, D, T, r, time, vol, mu, tol)
+}
+
 BS_fit_cpp <- function(S, D, T, r, time, vol_start, method, tol, eps) {
     .Call(`_DtD_BS_fit_cpp`, S, D, T, r, time, vol_start, method, tol, eps)
 }

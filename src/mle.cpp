@@ -3,7 +3,7 @@
 #include "utils.h"
 #include <math.h>
 
-class log_like{
+class log_like {
   const arma::uword n;
   const arma::vec &S, &D, &T, &r, dts, log_D, log_dts;
   arma::vec vol_vec;
@@ -92,4 +92,12 @@ est_result mle(
   out.success = fail == 0L;
 
   return out;
+}
+
+// [[Rcpp::export]]
+double merton_ll_cpp(
+    const arma::vec &S, const arma::vec &D, const arma::vec &T,
+    const arma::vec &r, const arma::vec &time,
+    const double vol, const double mu, const double tol){
+  return log_like(S, D, T, r, time, tol).compute(mu, vol);
 }

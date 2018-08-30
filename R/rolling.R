@@ -87,8 +87,10 @@ BS_fit_rolling <- function(
              names(cl), 0L)
   cl <- cl[c(1L, m)]
   cl[c("method", "tol", "eps")] <- list(method, tol, eps)
-  cl[[1L]] <- quote(DtD:::.BS_fit_check_n_setup)
-  out <- eval(cl, parent.frame())
+  tmp <- new.env(parent = parent.frame())
+  tmp$.BS_fit_check_n_setup <- .BS_fit_check_n_setup
+  cl[[1L]] <- quote(.BS_fit_check_n_setup)
+  out <- eval(cl, tmp)
   lens <- out$lens
   time <- out$time
 

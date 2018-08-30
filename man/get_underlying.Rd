@@ -23,7 +23,7 @@ get_underlying(S, D, T., r, vol, tol = 1e-12)
 \item{S}{numeric vector with observed stock prices.}
 
 \item{tol}{numeric scalar with tolerance to \code{\link{get_underlying}}.
-The difference is scaled  if \code{S} is large than \code{S}
+The difference is scaled  if the absolute of \code{S} is large than \code{tol}
 as in the \code{tolerance} argument to \code{\link{all.equal.numeric}}.}
 }
 \value{

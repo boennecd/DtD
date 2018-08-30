@@ -16,7 +16,7 @@
 #' @param vol_start numeric scalar with starting value for \eqn{\sigma}.
 #' @param method string to specify which estimation method to use.
 #' @param tol numeric scalar with tolerance to \code{\link{get_underlying}}.
-#' The difference is scaled  if \code{S} is large than \code{S}
+#' The difference is scaled  if the absolute of \code{S} is large than \code{tol}
 #' as in the \code{tolerance} argument to \code{\link{all.equal.numeric}}.
 #' @param eps convergence threshold.
 #'
@@ -50,8 +50,10 @@ BS_fit <- function(S, D, T., r, time, dt, vol_start,
              names(cl), 0L)
   cl <- cl[c(1L, m)]
   cl[c("method", "tol", "eps")] <- list(method, tol, eps)
-  cl[[1L]] <- quote(DtD:::.BS_fit_check_n_setup)
-  out <- eval(cl, parent.frame())
+  tmp <- new.env(parent = parent.frame())
+  tmp$.BS_fit_check_n_setup <- .BS_fit_check_n_setup
+  cl[[1L]] <- quote(.BS_fit_check_n_setup)
+  out <- eval(cl, tmp)
   lens <- out$lens
   time <- out$time
 
@@ -70,8 +72,10 @@ BS_fit <- function(S, D, T., r, time, dt, vol_start,
 }
 
 #' @importFrom checkmate assert_choice
-.BS_fit_check_n_setup <- function(S, D, T., r, time, dt, method, tol, eps){
-  assert_choice(method, c("iterative", "mle"))
+.BS_fit_check_n_setup <- function(S, D, T., r, time, dt, method, tol, eps,
+                                  is_missing_method_eps_ok = FALSE){
+  if(!(is_missing_method_eps_ok && missing(method)))
+    assert_choice(method, c("iterative", "mle"))
   if(!missing(time) && !missing(dt))
     stop("Either ", sQuote("dt"), " or ", sQuote("time"), " should be passed")
 
@@ -89,7 +93,12 @@ BS_fit <- function(S, D, T., r, time, dt, vol_start,
   stopifnot(length(time) == max_len)
   stopifnot(max_len > 2L)
 
-  .check_args(S = S, D = D, T. = T., r = r, time = time, tol = tol, eps = eps)
+  if(is_missing_method_eps_ok && missing(eps)){
+    .check_args(
+      S = S, D = D, T. = T., r = r, time = time, tol = tol)
+  } else
+    .check_args(
+      S = S, D = D, T. = T., r = r, time = time, tol = tol, eps = eps)
 
   list(lens = lens, time = time) # used later
 }

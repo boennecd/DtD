@@ -25,7 +25,7 @@ BS_fit_rolling(S, D, T., r, time, dt, vol_start, method = c("iterative",
 \item{method}{string to specify which estimation method to use.}
 
 \item{tol}{numeric scalar with tolerance to \code{\link{get_underlying}}.
-The difference is scaled  if \code{S} is large than \code{S}
+The difference is scaled  if the absolute of \code{S} is large than \code{tol}
 as in the \code{tolerance} argument to \code{\link{all.equal.numeric}}.}
 
 \item{eps}{convergence threshold.}

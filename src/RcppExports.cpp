@@ -37,6 +37,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// merton_ll_cpp
+double merton_ll_cpp(const arma::vec& S, const arma::vec& D, const arma::vec& T, const arma::vec& r, const arma::vec& time, const double vol, const double mu, const double tol);
+RcppExport SEXP _DtD_merton_ll_cpp(SEXP SSEXP, SEXP DSEXP, SEXP TSEXP, SEXP rSEXP, SEXP timeSEXP, SEXP volSEXP, SEXP muSEXP, SEXP tolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type S(SSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type D(DSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type T(TSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type r(rSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type time(timeSEXP);
+    Rcpp::traits::input_parameter< const double >::type vol(volSEXP);
+    Rcpp::traits::input_parameter< const double >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< const double >::type tol(tolSEXP);
+    rcpp_result_gen = Rcpp::wrap(merton_ll_cpp(S, D, T, r, time, vol, mu, tol));
+    return rcpp_result_gen;
+END_RCPP
+}
 // BS_fit_cpp
 Rcpp::List BS_fit_cpp(const arma::vec& S, const arma::vec& D, const arma::vec& T, const arma::vec& r, const arma::vec& time, double vol_start, const std::string method, const double tol, const double eps);
 RcppExport SEXP _DtD_BS_fit_cpp(SEXP SSEXP, SEXP DSEXP, SEXP TSEXP, SEXP rSEXP, SEXP timeSEXP, SEXP vol_startSEXP, SEXP methodSEXP, SEXP tolSEXP, SEXP epsSEXP) {
@@ -60,6 +78,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_DtD_BS_call_cpp", (DL_FUNC) &_DtD_BS_call_cpp, 5},
     {"_DtD_get_underlying_cpp", (DL_FUNC) &_DtD_get_underlying_cpp, 6},
+    {"_DtD_merton_ll_cpp", (DL_FUNC) &_DtD_merton_ll_cpp, 8},
     {"_DtD_BS_fit_cpp", (DL_FUNC) &_DtD_BS_fit_cpp, 9},
     {NULL, NULL, 0}
 };
