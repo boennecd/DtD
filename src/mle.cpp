@@ -5,7 +5,7 @@
 
 class log_like {
   const arma::uword n;
-  const arma::vec &S, &D, &T, &r, dts, log_D, log_dts;
+  const arma::vec &S, &D, &T, &r, dts, log_D, log_dts, sqrt_ts;
   arma::vec vol_vec;
 
   const double tol;
@@ -15,7 +15,7 @@ public:
     const arma::vec &S, const arma::vec &D, const arma::vec &T,
     const arma::vec &r, const arma::vec time, const double tol):
   n(S.n_elem), S(S), D(D), T(T), r(r), dts(diff(time)), log_D(arma::log(D)),
-  log_dts(arma::log(dts)), vol_vec(n), tol(tol) {}
+  log_dts(arma::log(dts)), sqrt_ts(arma::sqrt(T)), vol_vec(n), tol(tol) {}
 
   double compute(const double mu, const double vol){
     // find underlying
@@ -27,10 +27,10 @@ public:
       log_new = std::log(V[0]);
     const double *dt = dts.begin(), *log_dt = log_dts.begin(),
       vol_sq = vol * vol, *log_D_i = log_D.begin() + 1, *r_i = r.begin() + 1,
-      *t_i = T.begin() + 1;
+      *t_i = T.begin() + 1, *sqrt_t = sqrt_ts.begin() + 1;
     for(auto V_i = V.begin() + 1;
         V_i != V.end();
-        ++V_i, ++dt, ++log_dt, ++log_D_i, ++r_i, ++t_i){
+        ++V_i, ++dt, ++log_dt, ++log_D_i, ++r_i, ++t_i, ++sqrt_t){
       log_prev = log_new;
       log_new = std::log(*V_i);
 
@@ -40,7 +40,7 @@ public:
       // Notice the t_i instead of dt
       double log_deriv = R::pnorm(
         (log_new - *log_D_i + (*r_i + vol_sq / 2) * *t_i) /
-          (std::sqrt(*t_i) * vol),
+          (*sqrt_t * vol),
         0, 1, 1, 1);
 
       // the log(dt) is from the normalization constant

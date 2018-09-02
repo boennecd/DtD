@@ -51,6 +51,16 @@ all.equal(r1$n_iter, unname(r2$counts[1]))
 all.equal(r1$ests[1], r2$par[1])
 all.equal(r1$ests[2], exp(r2$par[2]), check.attributes = FALSE)
 
+# the log-likelihood integrates to one as it should though likely not the
+# most stable way to test this
+ll <- integrate(
+  function(x) sapply(x, function(S)
+    exp(merton_ll(
+      S = c(1, S), D = .8, T. = 3, r = .01, dt = 1/250, vol = .2,
+      mu = .05))),
+  lower = 1e-4, upper = 6)
+stopifnot(isTRUE(all.equal(ll$value, 1, tolerance = 1e-5)))
+
 }
 \seealso{
 \code{\link{BS_fit}}

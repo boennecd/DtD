@@ -31,6 +31,16 @@
 #' all.equal(r1$ests[1], r2$par[1])
 #' all.equal(r1$ests[2], exp(r2$par[2]), check.attributes = FALSE)
 #'
+#' # the log-likelihood integrates to one as it should though likely not the
+#' # most stable way to test this
+#' ll <- integrate(
+#'   function(x) sapply(x, function(S)
+#'     exp(merton_ll(
+#'       S = c(1, S), D = .8, T. = 3, r = .01, dt = 1/250, vol = .2,
+#'       mu = .05))),
+#'   lower = 1e-4, upper = 6)
+#' stopifnot(isTRUE(all.equal(ll$value, 1, tolerance = 1e-5)))
+#'
 #' @importFrom checkmate assert_number
 #'
 #' @export
@@ -44,6 +54,7 @@ merton_ll <- function(S, D, T., r, time, dt, vol, mu, tol = 1e-12){
   tmp <- new.env(parent = parent.frame())
   tmp$.BS_fit_check_n_setup <- .BS_fit_check_n_setup
   cl[[1L]] <- quote(.BS_fit_check_n_setup)
+  cl$min_len <- 2L
   out <- eval(cl, tmp)
   lens <- out$lens
   time <- out$time

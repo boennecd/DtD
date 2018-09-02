@@ -73,7 +73,8 @@ BS_fit <- function(S, D, T., r, time, dt, vol_start,
 
 #' @importFrom checkmate assert_choice
 .BS_fit_check_n_setup <- function(S, D, T., r, time, dt, method, tol, eps,
-                                  is_missing_method_eps_ok = FALSE){
+                                  is_missing_method_eps_ok = FALSE,
+                                  min_len = 3L){
   if(!(is_missing_method_eps_ok && missing(method)))
     assert_choice(method, c("iterative", "mle"))
   if(!missing(time) && !missing(dt))
@@ -91,7 +92,7 @@ BS_fit <- function(S, D, T., r, time, dt, vol_start,
 
   }
   stopifnot(length(time) == max_len)
-  stopifnot(max_len > 2L)
+  stopifnot(max_len >= min_len)
 
   if(is_missing_method_eps_ok && missing(eps)){
     .check_args(

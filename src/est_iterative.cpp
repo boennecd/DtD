@@ -18,7 +18,7 @@ est_result est_iterative(
   const arma::uword n = S.n_elem;
 
   // find solution
-  const arma::vec dts = diff(time);
+  const arma::vec dts = diff(time), sqrt_dts = arma::sqrt(dts);
   double &mu = out.mu, &vol = out.vol;
   vol = vol_start;
   const signed int it_max = 1000L;
@@ -31,11 +31,12 @@ est_result est_iterative(
     arma::vec V = get_underlying_cpp(S, D, T, r, vol_vec, tol);
 
     // compute vol and mean
-    const double *dt = dts.begin();
+    const double *dt = dts.begin(), *sqrt_dt = sqrt_dts.begin();
     double log_prev, log_new = std::log(V[0]), xbar = 0, log_return, i = 1.,
       sse = 0;
 
-    for(auto V_i = V.begin() + 1; V_i != V.end(); ++V_i, ++dt, i += 1.){
+    for(auto V_i = V.begin() + 1; V_i != V.end();
+        ++V_i, ++dt, ++sqrt_dt, i += 1.){
       log_prev = log_new;
       log_new = std::log(*V_i);
       log_return = log_new - log_prev;
@@ -51,8 +52,8 @@ est_result est_iterative(
        */
       double xbar_old = xbar;
       xbar += (log_return  / *dt - xbar) / i;
-      double t1 = std::sqrt(*dt), t2 = log_return / t1;
-      sse += (t2 - xbar_old * t1) * (t2 - xbar * t1);
+      double t1 = log_return / *sqrt_dt;
+      sse += (t1 - xbar_old * *sqrt_dt) * (t1 - xbar * *sqrt_dt);
     }
 
     vol = std::sqrt(sse / (n - 1.)); /* recall this is the regular division by
