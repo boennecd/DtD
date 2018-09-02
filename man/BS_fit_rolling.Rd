@@ -30,7 +30,7 @@ as in the \code{tolerance} argument to \code{\link{all.equal.numeric}}.}
 
 \item{eps}{convergence threshold.}
 
-\item{grp}{interger vector with the group identifier (e.g., units of
+\item{grp}{integer vector with the group identifier (e.g., units of
 months).}
 
 \item{width}{integer scalar with the units of \code{grp} to include in the
@@ -41,17 +41,17 @@ in each window.}
 }
 \value{
 Matrix with the \code{grp}, number of observation in the window, parameter
-estimates, \code{'n_iter'} as in \code{\link{BS_fit}}, and whether the
+estimates, and \code{'n_iter'} as in \code{\link{BS_fit}}, and whether the
 estimation method was successful.
 
 An \code{error} attribute is added in case other code than
-\code{\link{optim}} fails. It is a list os lists with the \code{grp} index
+\code{\link{optim}} fails. It is a list of lists with the \code{grp} index
 where the method failed and the output from \code{\link{try}}.
 }
 \description{
-Function to estimate the volatility, \eqn{\sigma}, and drift, \eqn{\mu}. See
-\code{vignette("Distance-to-default", package = "DtD")} for details. E.g.,
-the window can be over a given number of months.
+Function to estimate the volatility, \eqn{\sigma}, and drift, \eqn{\mu}. E.g.,
+the window can be over a given number of months. See
+\code{vignette("Distance-to-default", package = "DtD")} for details.
 }
 \examples{
 # Simulate data
