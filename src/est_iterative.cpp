@@ -21,10 +21,10 @@ est_result est_iterative(
   const arma::vec dts = diff(time), sqrt_dts = arma::sqrt(dts);
   double &mu = out.mu, &vol = out.vol;
   vol = vol_start;
-  const signed int it_max = 1000L;
+  const unsigned int it_max = 1000L;
   arma::vec vol_vec(n);
 
-  signed int &i = out.n_iter;
+  unsigned int &i = out.n_iter;
   for(i = 0; i < it_max; ++i){
     double vol_old = vol, mu_old = mu;
     vol_vec.fill(vol);
@@ -32,11 +32,12 @@ est_result est_iterative(
 
     // compute vol and mean
     const double *dt = dts.begin(), *sqrt_dt = sqrt_dts.begin();
-    double log_prev, log_new = std::log(V[0]), xbar = 0, log_return, i = 1.,
+    double log_prev, log_new = std::log(V[0]), xbar = 0, log_return, j = 1.,
       sse = 0;
 
+
     for(auto V_i = V.begin() + 1; V_i != V.end();
-        ++V_i, ++dt, ++sqrt_dt, i += 1.){
+        ++V_i, ++dt, ++sqrt_dt, j += 1.){
       log_prev = log_new;
       log_new = std::log(*V_i);
       log_return = log_new - log_prev;
@@ -51,7 +52,7 @@ est_result est_iterative(
        *  So first update the mean and then the sse
        */
       double xbar_old = xbar;
-      xbar += (log_return  / *dt - xbar) / i;
+      xbar += (log_return  / *dt - xbar) / j;
       double t1 = log_return / *sqrt_dt;
       sse += (t1 - xbar_old * *sqrt_dt) * (t1 - xbar * *sqrt_dt);
     }

@@ -19,7 +19,7 @@ arma::vec get_underlying_cpp(
 struct est_result {
   double mu, vol;
   bool success;
-  signed int n_iter;
+  unsigned int n_iter;
 
   est_result():
     mu (std::numeric_limits<double>::quiet_NaN()),
