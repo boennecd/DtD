@@ -28,7 +28,7 @@ BS_fit_rolling(S, D, T., r, time, dt, vol_start, method = c("iterative",
 The difference is scaled  if the absolute of \code{S} is large than \code{tol}
 as in the \code{tolerance} argument to \code{\link{all.equal.numeric}}.}
 
-\item{eps}{convergence threshold.}
+\item{eps}{numeric scalar with convergence threshold.}
 
 \item{grp}{integer vector with the group identifier (e.g., units of
 months).}

@@ -28,7 +28,7 @@ BS_fit(S, D, T., r, time, dt, vol_start, method = c("iterative", "mle"),
 The difference is scaled  if the absolute of \code{S} is large than \code{tol}
 as in the \code{tolerance} argument to \code{\link{all.equal.numeric}}.}
 
-\item{eps}{convergence threshold.}
+\item{eps}{numeric scalar with convergence threshold.}
 }
 \value{
 A list with the following components
@@ -44,6 +44,12 @@ vectors with length greater than one needs to have the same length. The
 Nelder-Mead method from \code{\link{optim}} is used when
 \code{method = "mle"}. Either \code{time} or \code{dt} should be passed.
 }
+\section{Warning}{
+
+Chosing \code{tol >= eps} or roughly equal may make the method alternate
+between two solutions for some data sets.
+}
+
 \examples{
 library(DtD)
 set.seed(83486778)

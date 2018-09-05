@@ -18,7 +18,7 @@
 #' @param tol numeric scalar with tolerance to \code{\link{get_underlying}}.
 #' The difference is scaled  if the absolute of \code{S} is large than \code{tol}
 #' as in the \code{tolerance} argument to \code{\link{all.equal.numeric}}.
-#' @param eps convergence threshold.
+#' @param eps numeric scalar with convergence threshold.
 #'
 #' @return
 #' A list with the following components
@@ -26,6 +26,10 @@
 #' \item{n_iter}{number of iterations when \code{method = "iterative"}
 #' and number of log likelihood evaluations when \code{method = "mle"}.}
 #' \item{success}{logical for whether the estimation method converged.}
+#'
+#' @section Warning:
+#' Chosing \code{tol >= eps} or roughly equal may make the method alternate
+#' between two solutions for some data sets.
 #'
 #' @examples
 #' library(DtD)
