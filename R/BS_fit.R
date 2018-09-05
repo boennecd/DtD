@@ -28,7 +28,7 @@
 #' \item{success}{logical for whether the estimation method converged.}
 #'
 #' @section Warning:
-#' Chosing \code{tol >= eps} or roughly equal may make the method alternate
+#' Choosing \code{tol >= eps} or roughly equal may make the method alternate
 #' between two solutions for some data sets.
 #'
 #' @examples

@@ -46,7 +46,7 @@ Nelder-Mead method from \code{\link{optim}} is used when
 }
 \section{Warning}{
 
-Chosing \code{tol >= eps} or roughly equal may make the method alternate
+Choosing \code{tol >= eps} or roughly equal may make the method alternate
 between two solutions for some data sets.
 }
 
