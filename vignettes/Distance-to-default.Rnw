@@ -112,13 +112,13 @@ The iterative methods is as follows. Start with an initial guess of the volatili
   \item compute the underlying asset values $V_k = C^{-1}(S_k, \hat{\sigma}^{(i - 1)})$ where $C^{-1}$ is the inverse of the call option price in equation~\eqref{eq:stock_relation} and implicitly depend on $D_t$, $T$, and $r$. Then compute the $\log$ returns $x_k = \log V_k - \log V_{k-1}$. \label{enum:it_first_step}
 %
   \item compute the maximum likelihood estimate as if we observed the $\log$ returns. I.e. compute
-  $$\begin{align*}
+  \begin{align*}
     \tilde\mu &= \frac{\sum_{k=1}^nx_k}{\sum_{k = 1}^n\sqrt{dt_k}} =
          \frac{V_n - V_0}{\sum_{k = 1}^n\sqrt{dt_k}} \\
     \left(\hat\sigma^{(i)}\right)^2 &= \frac{1}{n}\sum_{k = 1}^n
         \left(\frac{x_k}{\sqrt{dt_k}} - \sqrt{dt_k}\tilde\mu \right)^2 \\
     \hat\mu &= \tilde\mu + \frac{\left(\hat\sigma^{(i)}\right)^2}{2}
-    \end{align*}$$
+  \end{align*}
     where we have extended to unequal gaps, $dt_k$.
 %
   \item Repeat step~\ref{enum:it_first_step} if $(\hat{\sigma}^{(i)}, \hat{\mu}^{(i)})$ is far from $(\hat{\sigma}^{(i - 1)}, \hat{\mu}^{(i - 1)})$. Otherwise stop.
