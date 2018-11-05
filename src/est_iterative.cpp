@@ -19,7 +19,7 @@ est_result est_iterative(
 
   // find solution
   const arma::vec dts = diff(time), sqrt_dts = arma::sqrt(dts);
-  double &mu = out.mu, &vol = out.vol;
+  double &mu = out.mu, &vol = out.vol, sum_dts = arma::sum(dts);
   vol = vol_start;
   const unsigned int it_max = 1000L;
   arma::vec vol_vec(n);
@@ -30,36 +30,25 @@ est_result est_iterative(
     vol_vec.fill(vol);
     arma::vec V = get_underlying_cpp(S, D, T, r, vol_vec, tol);
 
-    // compute vol and mean
-    const double *dt = dts.begin(), *sqrt_dt = sqrt_dts.begin();
-    double log_prev, log_new = std::log(V[0]), xbar = 0, log_return, j = 1.,
-      sse = 0;
+    /* compute vol and mean */
+    /* log n save so we do not need to do it again in the next loop */
+    V = arma::log(V);
+    double mu_tilde = (*(V.end() - 1L) - V[0]) / sum_dts;
 
-
-    for(auto V_i = V.begin() + 1; V_i != V.end();
-        ++V_i, ++dt, ++sqrt_dt, j += 1.){
+    const double *sqrt_dt = sqrt_dts.begin();
+    double sse = 0, log_prev, log_new = V[0];
+    for(auto V_i = V.begin() + 1; V_i != V.end(); ++V_i, ++sqrt_dt){
       log_prev = log_new;
-      log_new = std::log(*V_i);
-      log_return = log_new - log_prev;
+      log_new = *V_i;
+      double log_diff = log_new - log_prev;
 
-      /* stable methods as in
-       *    https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance#Online_algorithm
-       *
-       *  r ~ N(\mu dt, dt \sigma^2)
-       *  <=> r / dt ~ N(\mu, \sigma^2 / dt)
-       *  <=> r / sqrt{dt} ~ N(\mu \sqrt{dt}, \sigma^2)
-       *
-       *  So first update the mean and then the sse
-       */
-      double xbar_old = xbar;
-      xbar += (log_return  / *dt - xbar) / j;
-      double t1 = log_return / *sqrt_dt;
-      sse += (t1 - xbar_old * *sqrt_dt) * (t1 - xbar * *sqrt_dt);
+      double delt = log_diff / *sqrt_dt - *sqrt_dt * mu_tilde;
+      sse += delt * delt;
     }
 
     vol = std::sqrt(sse / (n - 1.)); /* recall this is the regular division by
                                         n as we only have n - 1 returns */
-    mu = xbar + vol * vol / 2.;
+    mu = mu_tilde + vol * vol / 2.;
 
     // check if converged
     if(i > 0L and almost_eq(mu_old, mu, eps) and
