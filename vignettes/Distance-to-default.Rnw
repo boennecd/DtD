@@ -114,7 +114,7 @@ The iterative methods is as follows. Start with an initial guess of the volatili
   \item compute the maximum likelihood estimate as if we observed the $\log$ returns. I.e. compute
   \begin{align*}
     \tilde\mu &= \frac{\sum_{k=1}^nx_k}{\sum_{k = 1}^n\sqrt{dt_k}} =
-         \frac{V_n - V_0}{\sum_{k = 1}^n\sqrt{dt_k}} \\
+         \frac{\log V_n - \log V_0}{\sum_{k = 1}^n\sqrt{dt_k}} \\
     \left(\hat\sigma^{(i)}\right)^2 &= \frac{1}{n}\sum_{k = 1}^n
         \left(\frac{x_k}{\sqrt{dt_k}} - \sqrt{dt_k}\tilde\mu \right)^2 \\
     \hat\mu &= \tilde\mu + \frac{\left(\hat\sigma^{(i)}\right)^2}{2}
