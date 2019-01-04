@@ -51,7 +51,14 @@ d_1 &= \frac{\log(V_t) - \log{D_t} + \Lpar{r + \frac{1}{2}\sigma^2}T}{\sigma\sqr
 S_t &= C(V_t, D_t, T, \sigma, r) \label{eq:stock_relation}
 \end{align}%
 %
-where $C$ is a European call option price, $T$ is the time to maturity, $D_t$ is the debt to due at time $T + t$, and $r$ is the risk free rate. Common choices tend to be $T = 1$ year and $D_t$ as the short term debt plus half of the long term debt. $d_1$ in equation~\eqref{eq:dd} is the so-called distance-to-default which is the name of the package. It is a very good predictor of default risk despite it's simplicity \citep[see e.g.,][]{Bharath08}.
+where $C$ is a European call option price, $T$ is the time to maturity, $D_t$ is the debt to due at time $T + t$, and $r$ is the risk free rate. Common choices tend to be $T = 1$ year and $D_t$ as the short term debt plus half of the long term debt.
+The distance-to-default is%
+%
+$$
+DD = \frac{\log(V_t) - \log(D_t) + (\mu - \sigma^2 / 2)T}{\sigma \sqrt T}
+$$%
+%
+It is a very good predictor of default risk despite it's simplicity \citep[see e.g.,][]{Bharath08}.
 
 Equation~\eqref{eq:stock_relation} can be computed with the \verb|BS_call| function. Further, the \verb|get_underlying| function can be used to invert call option price in equation~\eqref{eq:stock_relation}
 
