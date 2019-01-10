@@ -51,14 +51,17 @@ d_1 &= \frac{\log(V_t) - \log{D_t} + \Lpar{r + \frac{1}{2}\sigma^2}T}{\sigma\sqr
 S_t &= C(V_t, D_t, T, \sigma, r) \label{eq:stock_relation}
 \end{align}%
 %
-where $C$ is a European call option price, $T$ is the time to maturity, $D_t$ is the debt to due at time $T + t$, and $r$ is the risk free rate. Common choices tend to be $T = 1$ year and $D_t$ as the short term debt plus half of the long term debt.
+where $C$ is a European call option price, $T$ is the time to maturity, $D_t$ is the debt to due at time $T + t$, and $r$ is the risk free rate. Common choices tend to be $T = 1$ year and $D_t$ is the short term debt plus half of the long term debt.
 The distance-to-default is%
 %
 $$
-DD = \frac{\log(V_t) - \log(D_t) + (\mu - \sigma^2 / 2)T}{\sigma \sqrt T}
+DD_t = \frac{\log(V_t) - \log(D_t) + (\mu - \sigma^2 / 2)T}{\sigma \sqrt T}
 $$%
 %
-It is a very good predictor of default risk despite it's simplicity \citep[see e.g.,][]{Bharath08}.
+It is a very good predictor of default risk despite it's simplicity
+\citep[see e.g.,][]{Bharath08}. However, to compute it we would need the value
+of the underlying asset, the drift, and volatility. This package package provides
+methods to estimate these.
 
 Equation~\eqref{eq:stock_relation} can be computed with the \verb|BS_call| function. Further, the \verb|get_underlying| function can be used to invert call option price in equation~\eqref{eq:stock_relation}
 
@@ -126,7 +129,7 @@ The iterative methods is as follows. Start with an initial guess of the volatili
         \left(\frac{x_k}{\sqrt{dt_k}} - \sqrt{dt_k}\tilde\mu \right)^2 \\
     \hat\mu &= \tilde\mu + \frac{\left(\hat\sigma^{(i)}\right)^2}{2}
   \end{align*}
-    where we have extended to unequal gaps, $dt_k$.
+    where we have extended the model to unequal gaps each with length $dt_k$.
 %
   \item Repeat step~\ref{enum:it_first_step} if $(\hat{\sigma}^{(i)}, \hat{\mu}^{(i)})$ is far from $(\hat{\sigma}^{(i - 1)}, \hat{\mu}^{(i - 1)})$. Otherwise stop.
 \end{enumerate}
