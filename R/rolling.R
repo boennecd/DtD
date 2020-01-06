@@ -1,4 +1,3 @@
-
 #' @title  Fit Black-Scholes Parameters Over Rolling Window
 #'
 #' @description

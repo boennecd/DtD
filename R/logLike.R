@@ -1,4 +1,3 @@
-
 #' @title Compute Log-Likelihood of Merton Model
 #'
 #' @description

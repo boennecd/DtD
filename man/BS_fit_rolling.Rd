@@ -4,8 +4,21 @@
 \alias{BS_fit_rolling}
 \title{Fit Black-Scholes Parameters Over Rolling Window}
 \usage{
-BS_fit_rolling(S, D, T., r, time, dt, vol_start, method = c("iterative",
-  "mle"), tol = 1e-12, eps = 1e-08, grp, width, min_obs)
+BS_fit_rolling(
+  S,
+  D,
+  T.,
+  r,
+  time,
+  dt,
+  vol_start,
+  method = c("iterative", "mle"),
+  tol = 1e-12,
+  eps = 1e-08,
+  grp,
+  width,
+  min_obs
+)
 }
 \arguments{
 \item{S}{numeric vector with observed stock prices.}

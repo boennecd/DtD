@@ -4,8 +4,18 @@
 \alias{BS_fit}
 \title{Fit Black-Scholes Parameters}
 \usage{
-BS_fit(S, D, T., r, time, dt, vol_start, method = c("iterative", "mle"),
-  tol = 1e-12, eps = 1e-08)
+BS_fit(
+  S,
+  D,
+  T.,
+  r,
+  time,
+  dt,
+  vol_start,
+  method = c("iterative", "mle"),
+  tol = 1e-12,
+  eps = 1e-08
+)
 }
 \arguments{
 \item{S}{numeric vector with observed stock prices.}

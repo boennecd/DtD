@@ -9,9 +9,9 @@ arma::vec get_underlying_cpp(
   arma::vec out(n);
 
   // starting values
-  double V_min = S[0];
-  double V_max = 100 * S[0] + D[0];
-  double V_mid =  10 * S[0] + D[0];
+  double V_min = S[0],
+         V_max = 100 * S[0] + D[0],
+         V_mid =  10 * S[0] + D[0];
 
   // compute output
   const double *s_i   = S.begin(),

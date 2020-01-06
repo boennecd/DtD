@@ -1,3 +1,7 @@
+# DtD 0.2.2
+* Use profile likelihood function with MLE. This is faster and more precise.
+* Fixed errors in vignette.
+
 # DtD 0.2.1
 * Fixed typos and errors in vignette.
 

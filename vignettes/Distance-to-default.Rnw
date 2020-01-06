@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage{natbib}
 \usepackage{amsmath}
+\usepackage[margin=1in]{geometry}
 
 \newcommand*\diff{\mathop{}\!\mathrm{d}}
 \newcommand{\Lpar}[1]{\left( #1\right)}
@@ -122,13 +123,13 @@ The iterative methods is as follows. Start with an initial guess of the volatili
   \item compute the underlying asset values $V_k = C^{-1}(S_k, \hat{\sigma}^{(i - 1)})$ where $C^{-1}$ is the inverse of the call option price in equation~\eqref{eq:stock_relation} and implicitly depend on $D_t$, $T$, and $r$. Then compute the $\log$ returns $x_k = \log V_k - \log V_{k-1}$. \label{enum:it_first_step}
 %
   \item compute the maximum likelihood estimate as if we observed the $\log$ returns. I.e. compute
-  \begin{align*}
-    \tilde\mu &= \frac{\sum_{k=1}^nx_k}{\sum_{k = 1}^n\sqrt{dt_k}} =
-         \frac{\log V_n - \log V_0}{\sum_{k = 1}^n\sqrt{dt_k}} \\
+  \begin{align}
+    \tilde\mu &= \frac{\sum_{k=1}^nx_k}{\sum_{k = 1}^n dt_k} =
+         \frac{\log V_n - \log V_0}{\sum_{k = 1}^n dt_k} \nonumber\\
     \left(\hat\sigma^{(i)}\right)^2 &= \frac{1}{n}\sum_{k = 1}^n
-        \left(\frac{x_k}{\sqrt{dt_k}} - \sqrt{dt_k}\tilde\mu \right)^2 \\
-    \hat\mu &= \tilde\mu + \frac{\left(\hat\sigma^{(i)}\right)^2}{2}
-  \end{align*}
+        \left(\frac{x_k}{\sqrt{dt_k}} - \sqrt{dt_k}\tilde\mu \right)^2 \nonumber\\
+    \hat\mu &= \tilde\mu + \frac{\left(\hat\sigma^{(i)}\right)^2}{2} \label{eqn:iteDrift}
+  \end{align}
     where we have extended the model to unequal gaps each with length $dt_k$.
 %
   \item Repeat step~\ref{enum:it_first_step} if $(\hat{\sigma}^{(i)}, \hat{\mu}^{(i)})$ is far from $(\hat{\sigma}^{(i - 1)}, \hat{\mu}^{(i - 1)})$. Otherwise stop.
@@ -157,15 +158,15 @@ it_est
 The volatility is quite close the actual value while the drift is a bit off. This may be due to the fact that the likelihood is flat in the drift. The maximum likelihood estimator is obtained by maximizing the observed log likelihood%
 %
 \begin{equation}\label{eq:log_like}\begin{split}
-L(\mu,\sigma,\vec{S}) & \propto
-  - n \log \Lpar{\sigma^2dt}
+L(\mu,\sigma,\vec{S}) & =
+  - n \log \Lpar{\sigma^2}
   - \sum_{k = 1}^n
     \frac{\Lpar{\log \frac{C^{-1}(S_k, \sigma)}{C^{-1}(S_{k - 1}, \sigma)} - \Lpar{\mu - \sigma^2/2}dt_k}^2}{\sigma^2dt_k} \\
 %
  & \hphantom{=}\hspace{12pt}
   - 2 \sum_{k = 1}^n\Lpar{\log C^{-1}\Lpar{S_k, \sigma}
  + \log \Lver{
-  C'\Lpar{C^{-1}\Lpar{S_k, \sigma},\sigma }}}
+  C'\Lpar{C^{-1}\Lpar{S_k, \sigma},\sigma }}} + \dots
 \end{split}\end{equation}%
 %
 where $C^{-1}$ is the inverse of the call option price in equation~\eqref{eq:stock_relation} and implicitly depend on $D_t$, $T$, and $r$. Notice that we need to use $dt_k$ in \eqref{eq:log_like} and the time to maturity, $T$, in $C$ and $C^{-1}$. The last term in equation~\eqref{eq:log_like} follows from the change of variable%
@@ -178,7 +179,45 @@ where $C^{-1}$ is the inverse of the call option price in equation~\eqref{eq:sto
 \end{split}
 \end{equation}%
 %
-where $f$ denotes a density and the subscript denotes which random variable the density is for. We can estimate the parameters with the MLE method as follows
+where $f$ denotes a density and the subscript denotes which random variable the density is for.
+
+The first order conditions for the drift, $\mu$, is%
+%
+\begin{align*}
+&& \sum_{k = 1}^n
+  x_k - (\mu - \sigma^2/2)dt_k &=
+\sum_{k = 1}^n x_k - (\mu - \sigma^2 / 2)
+  \sum_{k = 1}^n dt_k \\
+&&&= 0 \\
+\Leftrightarrow && \mu &= \frac
+  {\sum_{k = 1}^n x_k}{\sum_{k = 1}^n dt_k} +  \frac{\sigma^2}{2} \\
+&&&=  \frac{\log C^{-1}(S_n, \sigma) - \log C^{-1}(S_0, \sigma)}
+  {\sum_{k = 1}^n dt_k} + \frac{\sigma^2}2
+\end{align*}%
+%
+as in Equation \eqref{eqn:iteDrift}. Substituting into the log-likelihood
+in Equation \eqref{eq:log_like} yields %
+%
+\begin{equation*}\begin{split}
+L(\sigma,\vec{S}) & =
+  - n \log \Lpar{\sigma^2}
+  - \sum_{k = 1}^n
+    \frac
+    {\Lpar{\log \frac{C^{-1}(S_k, \sigma)}{C^{-1}(S_{k - 1}, \sigma)} -
+    \frac
+    {\log C^{-1}(S_n, \sigma)/C^{-1}(S_0, \sigma)}
+    {\sum_{k = 1}^n dt_k}dt_k}^2}{\sigma^2dt_k} \\
+%
+ & \hphantom{=}\hspace{12pt}
+  - 2 \sum_{k = 1}^n\Lpar{\log C^{-1}\Lpar{S_k, \sigma}
+ + \log \Lver{
+  C'\Lpar{C^{-1}\Lpar{S_k, \sigma},\sigma }}} + \dots
+\end{split}\end{equation*}%
+%
+which we can optimize numerically.
+
+
+We can estimate the parameters with the MLE method as follows
 
 <<use_mle>>=
 mle_est <- BS_fit(

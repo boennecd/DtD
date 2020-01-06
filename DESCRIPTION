@@ -1,7 +1,7 @@
 Package: DtD
 Type: Package
 Title: Distance to Default
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: c(person("Benjamin", "Christoffersen", 
                     email = "boennecd@gmail.com", 
                     role = c("cre", "aut")),
@@ -22,5 +22,5 @@ Suggests: knitr,
     testthat, 
     microbenchmark
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+RoxygenNote: 7.0.1
 SystemRequirements: C++11
