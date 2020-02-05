@@ -2,6 +2,7 @@
 #include "bs.h"
 #include "utils.h"
 #include <math.h>
+#include "Brent_fmin.h"
 
 class log_like {
   const arma::uword n;
@@ -101,6 +102,17 @@ static double optimfunc(int n, double *p, void *ex)
   return -ll->compute(std::exp(p[0]));
 }
 
+static unsigned optimfunc_counter = 0L;
+
+static double optimfunc(double p, void *ex)
+{
+  ++optimfunc_counter;
+  log_like* ll = (log_like*) ex;
+
+  /* -1 as minimization is the default */
+  return -ll->compute(std::exp(p));
+}
+
 est_result mle(
     const arma::vec &S, const arma::vec &D, const arma::vec &T,
     const arma::vec &r, const arma::vec &time, double vol_start,
@@ -108,16 +120,54 @@ est_result mle(
   // assign arguments
   double dpar[1] = { std::log(vol_start) },
          *opar = new double[1], val;
-  int fail, fncount;
+  int fail(0L), fncount;
   const double alpha = 1;
   const double beta  = 0.5;
   const double gamm  = 2.0;
 
   est_result out;
   log_like ll(S, D, T, r, time, tol);
-  optim(1L /* npar */, dpar, opar, &val, optimfunc, &fail, -1e8 /* abstol */,
-        eps /* reltol */, (void *) &ll, alpha, beta, gamm, 0L /* trace */,
-        &fncount, 10000L /* maxit */);
+  if(false){
+    /* old method */
+    optim(1L /* npar */, dpar, opar, &val, optimfunc, &fail, -1e8 /* abstol */,
+          eps /* reltol */, (void *) &ll, alpha, beta, gamm, 0L /* trace */,
+          &fncount, 10000L /* maxit */);
+  } else {
+    optimfunc_counter = 0L;
+    double const fac = std::exp(5);
+    double lb = vol_start / fac,
+           ub = vol_start * fac,
+          out;
+
+    unsigned const nmax = 1000L;
+    unsigned i;
+    for(i = 0; i < nmax; ++i){
+      double const llb = std::log(lb),
+                   lub = std::log(ub);
+      out = Brent_fmin(llb, lub, optimfunc, &ll, eps);
+
+      /* check convergence */
+      if(std::abs(out - llb) < 1.25 * eps){
+        ub = lb;
+        lb /= fac;
+        continue;
+      }
+      if(std::abs(out - lub) < 1.25 * eps){
+        lb = ub;
+        ub *= fac;
+        continue;
+      }
+
+      /* found interior value */
+      break;
+    }
+
+    if(i == nmax)
+      fail = 1L;
+
+    opar[0] = out;
+    fncount = optimfunc_counter;
+  }
 
   out.vol = std::exp(opar[0]);
   out.mu  = ll.get_mu(out.vol);

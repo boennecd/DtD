@@ -10,9 +10,9 @@ test_that("mle method gives previous output without supplying a starting value f
        expect_equal(
          BS_fit(S = S, D = D, T. = T, r = r, time = time, method = "mle"),
          structure(list(
-           ests = structure(c(0.0805269674101987, 0.101307053290089),
+           ests = structure(c(0.0805287001624244, 0.101322187871702),
                             .Names = c("mu", "vol")),
-           n_iter =  26L, success = TRUE),
+           n_iter = 18L, success = TRUE),
            .Names = c("ests", "n_iter", "success"))))
 })
 
@@ -28,8 +28,8 @@ test_that("mle method gives previous output when supplying a starting value for 
          BS_fit(S = S, D = D, T. = T, r = r, time = time, method = "mle",
                 vol_start = 1),
          structure(list(
-           ests = structure(c(0.102790534402294, 0.118642486263979),
+           ests = structure(c(0.102792869281686, 0.118660088139721),
                             .Names = c("mu", "vol")),
-           n_iter = 32L, success = TRUE),
+           n_iter = 18L, success = TRUE),
            .Names = c("ests", "n_iter", "success"))))
 })
