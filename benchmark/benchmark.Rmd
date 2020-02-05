@@ -2,7 +2,7 @@
 title: "DtD benchmark"
 author: "Benjamin Christoffersen"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_document
+output: rmarkdown::github_document
 ---
 
 ```{r setup, include = FALSE}
