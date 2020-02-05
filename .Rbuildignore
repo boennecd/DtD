@@ -1,8 +1,10 @@
+^CRAN-RELEASE$
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^\.sandbox\/.*$
+^\.sandbox
 ^\.travis\.yml$
 ^cran-comments\.md$
 ^README\.md$
 ^vignettes\/.*\.(?!(Rnw|bib)).*$
 TODO
+^benchmark

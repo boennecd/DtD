@@ -1,0 +1,51 @@
+---
+title: "DtD benchmark"
+author: "Benjamin Christoffersen"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE, comment = "#>", fig.width = 7, fig.height = 4)
+options(digits = 10)
+```
+
+Simulate data
+
+```{r load_dtd}
+library(DtD)
+```
+
+```{r sim_dat}
+vol <- .1
+mu  <- .05
+dt  <- .05
+V_0 <- 100
+t.  <- (1:50 - 1) * dt
+D   <- c(rep(80, 27), rep( 70, length(t.) - 27))
+r   <- c(rep( 0, 13), rep(.02, length(t.) - 13))
+
+set.seed(1L)
+dat <- replicate(
+  20, simplify = FALSE, BS_sim(
+    vol = vol, mu = mu, dt = dt, V_0 = V_0, D = D, r = r, T. = 1))
+```
+
+Define estimation function.
+
+```{r def_ests_func}
+est_func <- function(method)
+  sapply(dat, function(d) with(d, BS_fit(
+    S = S, D = D, T. = T, r = r, time = time, method = method)$ests))
+
+est_func("iterative")
+est_func("mle")
+```
+
+Benchmark.
+
+```{r benchmark}
+microbenchmark::microbenchmark(
+  iterative = est_func("iterative"), mle = est_func("mle"))
+```

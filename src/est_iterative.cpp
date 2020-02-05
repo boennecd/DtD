@@ -21,7 +21,7 @@ est_result est_iterative(
   const arma::vec dts = diff(time), sqrt_dts = arma::sqrt(dts);
   double &mu = out.mu, &vol = out.vol, sum_dts = arma::sum(dts);
   vol = vol_start;
-  const unsigned int it_max = 1000L;
+  const unsigned int it_max = 10000L;
   arma::vec vol_vec(n);
 
   unsigned int &i = out.n_iter;
