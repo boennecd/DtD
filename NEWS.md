@@ -1,5 +1,6 @@
 # DtD 0.2.2
 * Use profile likelihood function with MLE. This is faster and more precise.
+* Use the same optimization method as optimize.
 * Fixed errors in vignette.
 
 # DtD 0.2.1

@@ -1,13 +1,15 @@
 ## Test environments
-* local Windows 10 machine with R 3.5.2
+* Ubuntu 18.04 LTS with gcc 8.3.0
+  R version 3.6.1
+* Ubuntu 16.04 LTS (on travis-ci)
+  R version 3.6.2
+* Ubuntu 18.04 LTS with gcc 8.3.0 with --enable-lto
+  R devel (2020-02-04 r77771)
+* Ubuntu 18.04 LTS with clang 6.0.0 with ASAN and 
+  UBSAN checks
+  R devel (2020-02-04 r77771)
 * win-builder (devel and release)
-* Ubuntu 14.04 (on travis-ci), R 3.5.2
-
-I have only changed a vignette which had some rather bad typos and errors. Thus, 
-I have only performed tests on the aforementioned environments. 
-
-The error in the CRAN check results on Solaris seems to be due to an error in 
-checkmate.
+* `rhub::check_for_cran()`
 
 ## R CMD check results
 There were no ERRORs, WARNINGs, or NOTES.
