@@ -178,7 +178,7 @@ est_result mle(
   return out;
 }
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 double merton_ll_cpp(
     const arma::vec &S, const arma::vec &D, const arma::vec &T,
     const arma::vec &r, const arma::vec &time,

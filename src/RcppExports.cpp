@@ -11,7 +11,6 @@ double BS_call_cpp(const double V, const double D, const double T, const double 
 RcppExport SEXP _DtD_BS_call_cpp(SEXP VSEXP, SEXP DSEXP, SEXP TSEXP, SEXP rSEXP, SEXP volSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const double >::type V(VSEXP);
     Rcpp::traits::input_parameter< const double >::type D(DSEXP);
     Rcpp::traits::input_parameter< const double >::type T(TSEXP);
@@ -26,7 +25,6 @@ arma::vec get_underlying_cpp(const arma::vec& S, const arma::vec& D, const arma:
 RcppExport SEXP _DtD_get_underlying_cpp(SEXP SSEXP, SEXP DSEXP, SEXP TSEXP, SEXP rSEXP, SEXP volSEXP, SEXP tolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::vec& >::type S(SSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type D(DSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type T(TSEXP);
@@ -42,7 +40,6 @@ double merton_ll_cpp(const arma::vec& S, const arma::vec& D, const arma::vec& T,
 RcppExport SEXP _DtD_merton_ll_cpp(SEXP SSEXP, SEXP DSEXP, SEXP TSEXP, SEXP rSEXP, SEXP timeSEXP, SEXP volSEXP, SEXP muSEXP, SEXP tolSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::vec& >::type S(SSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type D(DSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type T(TSEXP);
@@ -60,7 +57,6 @@ Rcpp::List BS_fit_cpp(const arma::vec& S, const arma::vec& D, const arma::vec& T
 RcppExport SEXP _DtD_BS_fit_cpp(SEXP SSEXP, SEXP DSEXP, SEXP TSEXP, SEXP rSEXP, SEXP timeSEXP, SEXP vol_startSEXP, SEXP methodSEXP, SEXP tolSEXP, SEXP epsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::vec& >::type S(SSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type D(DSEXP);
     Rcpp::traits::input_parameter< const arma::vec& >::type T(TSEXP);

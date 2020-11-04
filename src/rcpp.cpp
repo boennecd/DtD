@@ -1,6 +1,6 @@
 #include "bs.h"
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 Rcpp::List BS_fit_cpp(
     const arma::vec &S, const arma::vec &D, const arma::vec &T,
     const arma::vec &r, const arma::vec &time, double vol_start,

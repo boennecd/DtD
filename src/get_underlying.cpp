@@ -1,6 +1,6 @@
 #include "bs.h"
 
-// [[Rcpp::export]]
+// [[Rcpp::export(rng = false)]]
 arma::vec get_underlying_cpp(
     const arma::vec &S, const arma::vec &D, const arma::vec &T,
     const arma::vec &r, const arma::vec &vol, const double tol){
