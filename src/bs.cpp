@@ -30,14 +30,14 @@ double BS_call_cpp_inv(
     const double S, const double D, const double T, const double r,
     const double vol, const double tol,
     double V_min, double V_max, double V_mid){
-  const double log_D = std::log(D);
-  const double D_present = D * std::exp(-r * T);
+  const double log_D = std::log(D),
+           D_present = D * std::exp(-r * T);
 
   // define function
   bool scale = std::abs(S) > tol;
   auto func = [&](double x){
-    double diff = BS_call_cpp_comp(x, T, r, vol, log_D, D_present) - S;
-    return(scale ? diff / S : S);
+    const double diff = BS_call_cpp_comp(x, T, r, vol, log_D, D_present) - S;
+    return scale ? diff / S : diff;
   };
 
   // quick check
