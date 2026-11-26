@@ -1,15 +1,13 @@
-## Test environments
-* Ubuntu 18.04 LTS with gcc 8.3.0
-  R version 3.6.1
-* Ubuntu 16.04 LTS (on travis-ci)
-  R version 3.6.2
-* Ubuntu 18.04 LTS with gcc 8.3.0 with --enable-lto
-  R devel (2020-02-04 r77771)
-* Ubuntu 18.04 LTS with clang 6.0.0 with ASAN and 
-  UBSAN checks
-  R devel (2020-02-04 r77771)
-* win-builder (devel and release)
-* `rhub::check_for_cran()`
+## New version submission
+
+CRAN archived DtD 0.2.2 on 2025-12-25 after check findings remained unresolved.
+DtD 0.2.3 uses R's default C++ standard and removes the unused `LazyData` field.
+
+## Test environment
+
+* Debian 13 (x86_64), R 4.6.2, GCC and G++ 14.2.0.
 
 ## R CMD check results
-There were no ERRORs, WARNINGs, or NOTES.
+
+`R CMD check --as-cran DtD_0.2.3.tar.gz` reported 0 errors, 0 warnings,
+and 1 note. The incoming feasibility check records the previous CRAN archive.
