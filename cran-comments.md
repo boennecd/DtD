@@ -27,17 +27,17 @@ current fixtures use named vectors and lists.
 
 ## Sanitizer and Valgrind checks
 
-All four checks used R-devel r90991 on x86_64 with `--no-manual`. Each check
-ran the examples and passed all 506 test assertions.
+All four checks used R-devel on x86_64 with `--no-manual`. Each check ran
+the examples, passed all 506 test assertions, and reported 0 errors,
+0 warnings, and 0 notes.
 
-* Fedora Linux 44, GCC and G++ 16.2.1. The check used ASan and UBSan with leak
-  detection disabled. It used `--as-cran --no-build-vignettes`. It reported
-  0 errors, 0 warnings, and 1 note because Ghostscript was unavailable for
-  the PDF size check.
-* Fedora Linux 44, GCC and G++ 16.2.1, with Valgrind 3.27.1. The check used
-  `--use-valgrind --no-stop-on-test-error`, with origin tracking and full
-  leak checks. It reported 0 errors, 0 warnings, and 0 notes. Valgrind
-  reported 0 memory errors and 0 bytes definitely, indirectly, or possibly lost.
-* Ubuntu 26.04.1 LTS, Clang 23.1.6. One check enabled ASan and UBSan with
-  leak detection disabled. The other enabled UBSan. Both used
-  `--no-stop-on-test-error` and reported 0 errors, 0 warnings, and 0 notes.
+* Fedora Linux 44, R-devel r90998, GCC and G++ 16.2.1. The check used ASan
+  and UBSan with leak detection disabled and `--as-cran --no-build-vignettes`.
+  The PDF size check passed in the rerun with Ghostscript.
+* Fedora Linux 44, R-devel r90991, GCC and G++ 16.2.1, and Valgrind 3.27.1.
+  The check used `--use-valgrind --no-stop-on-test-error`, with origin
+  tracking and full leak checks. Valgrind reported 0 memory errors and 0 bytes
+  definitely, indirectly, or possibly lost.
+* Ubuntu 26.04.1 LTS, R-devel r90991, Clang 23.1.6. One check enabled ASan
+  and UBSan with leak detection disabled. The other enabled UBSan. Both
+  used `--no-stop-on-test-error`.
