@@ -65,7 +65,7 @@ jobs:
           token: ${{ secrets.RHUB_TOKEN }}
           job-config: ${{ matrix.config.job-config }}
       - name: Install TinyTeX for PDF vignettes
-        if: contains(fromJSON('["gcc-asan","valgrind","clang-asan","clang-ubsan"]'), matrix.config.label)
+        if: contains(fromJSON('["gcc-asan","valgrind","clang-asan","clang-ubsan"]'), matrix.config.name)
         run: |
           tex_dir="$RUNNER_TEMP/dtd-tex"
           tex_sha256=5b75befa848deae702ae6fa12ff0eef3f110d7e4e2a979ae99f101eba3c9c70d
