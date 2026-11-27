@@ -25,13 +25,19 @@ All five hosted checks reported 0 errors, 0 warnings, and 0 notes. An earlier
 R-devel check flagged deprecated `.Names` attributes in test fixtures. The
 current fixtures use named vectors and lists.
 
-## Sanitizer and Valgrind attempts
+## Sanitizer and Valgrind checks
 
-All four attempts used R-devel r90991 on x86_64. Each build stopped because
-the PDF vignette required `pdflatex`. Package check results are pending.
+All four checks used R-devel r90991 on x86_64 with `--no-manual`. Each check
+ran the examples and passed all 506 test assertions.
 
-* Fedora Linux 44 with GCC and G++ 16.2.1. The GCC sanitizer job enabled ASan
-  and UBSan with leak detection disabled. The Valgrind job enabled origin
-  tracking and full leak checks.
-* Ubuntu 26.04.1 LTS with Clang 23.1.6. One job enabled ASan and UBSan with
-  leak detection disabled. The other job enabled UBSan.
+* Fedora Linux 44, GCC and G++ 16.2.1. The check used ASan and UBSan with leak
+  detection disabled. It used `--as-cran --no-build-vignettes`. It reported
+  0 errors, 0 warnings, and 1 note because Ghostscript was unavailable for
+  the PDF size check.
+* Fedora Linux 44, GCC and G++ 16.2.1, with Valgrind 3.27.1. The check used
+  `--use-valgrind --no-stop-on-test-error`, with origin tracking and full
+  leak checks. It reported 0 errors, 0 warnings, and 0 notes. Valgrind
+  reported 0 memory errors and 0 bytes definitely, indirectly, or possibly lost.
+* Ubuntu 26.04.1 LTS, Clang 23.1.6. One check enabled ASan and UBSan with
+  leak detection disabled. The other enabled UBSan. Both used
+  `--no-stop-on-test-error` and reported 0 errors, 0 warnings, and 0 notes.

@@ -81,6 +81,11 @@ jobs:
           tex_bin="$tex_dir/.TinyTeX/bin/x86_64-linux"
           test -x "$tex_bin/pdflatex"
           printf '%s\n' "$tex_bin" >> "$GITHUB_PATH"
+      - name: Install Ghostscript for CRAN PDF checks
+        if: matrix.config.name == 'gcc-asan'
+        run: |
+          dnf install -y ghostscript
+          printf 'BUILD_ARGS=%s\n' "${BUILD_ARGS:+$BUILD_ARGS }--compact-vignettes=gs+qpdf" >> "$GITHUB_ENV"
       - uses: r-hub/actions/run-check@v1
         with:
           token: ${{ secrets.RHUB_TOKEN }}
