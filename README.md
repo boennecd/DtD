@@ -2,18 +2,24 @@
 DtD: Distance to Default
 ========================
 
-[![Build Status on Travis](https://travis-ci.org/boennecd/DtD.svg?branch=master)](https://travis-ci.org/boennecd/DtD) [![](https://www.r-pkg.org/badges/version/DtD)](http://cran.rstudio.com/web/packages/DtD/index.html) [![CRAN RStudio mirror downloads](http://cranlogs.r-pkg.org/badges/DtD)](http://cran.rstudio.com/web/packages/DtD/index.html)
+[![R-CMD-check](https://github.com/boennecd/DtD/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/boennecd/DtD/actions/workflows/R-CMD-check.yaml)
+[![CRAN version](https://www.r-pkg.org/badges/version/DtD)](https://CRAN.R-project.org/package=DtD)
+[![CRAN downloads](https://cranlogs.r-pkg.org/badges/last-month/DtD)](https://cranlogs.r-pkg.org/)
 
-This package provides fast methods to work with Merton's distance to default model. The methods includes simulation and estimation of the parameters. It can be installed with `devtools` by calling
+DtD simulates asset and equity values and estimates model parameters for Merton's distance-to-default model.
+
+DtD requires R 4.2.3 or later.
+
+Install the released version from CRAN.
 
 ``` r
-devtools::install_github("boennecd/DtD")
+install.packages(pkgs = "DtD")
 ```
 
-or install with the version on CRAN
+Install the development version from GitHub.
 
 ``` r
-install.packages("DtD")
+devtools::install_github(repo = "boennecd/DtD")
 ```
 
-See [this vignette](vignettes/Distance-to-default.pdf) for examples of how to use the functions.
+The vignette shows how to simulate equity values, recover asset values, and estimate drift and volatility. [Using Distance to Default](vignettes/Distance-to-default.pdf)

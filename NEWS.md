@@ -1,3 +1,9 @@
+# DtD 0.2.3
+
+* Build with R's default C++ standard. DtD now requires R 4.2.3 or later.
+* Fix a bracketing error in `get_underlying()` for positive equity prices at
+  or below the inversion tolerance.
+
 # DtD 0.2.2
 * Use profile likelihood function with MLE. This is faster and more precise.
 * Use the same optimization method as optimize.
